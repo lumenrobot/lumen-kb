@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin
+      name="%pluginName"
+      id="id.ac.itb.ee.lskk.lumen.core"
+      version="1.0.0"
+      provider-name="%providerName">
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.emf.ecore" export="true"/>
+      <import plugin="org.soluvas.socmed" export="true"/>
+   </requires>
+
+   <runtime>
+      <library name=".">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated lumen -->
+      <package
+            uri="http://lskk.ee.itb.ac.id/schema/lumen.core/1.0"
+            class="id.ac.itb.ee.lskk.lumen.core.LumenPackage"
+            genModel="src/main/resources/id/ac/itb/ee/lskk/lumen/core/lumen.genmodel"/>
+   </extension>
+
+</plugin>

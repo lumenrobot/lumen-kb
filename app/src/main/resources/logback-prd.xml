@@ -1,0 +1,169 @@
+<configuration scan="true" scanPeriod="15 seconds">
+
+	<!-- appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender-->
+
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter-->
+		<!-- On Windows machines setting withJansi to true enables ANSI
+		    color code interpretation by the Jansi library. This requires
+		    org.fusesource.jansi:jansi:1.8 on the class path.  Note that
+		    Unix-based operating systems such as Linux and Mac OS X
+		    support ANSI color codes by default. -->
+		<withJansi>true</withJansi>
+		<file>${user.home}/lumen_lumen_prd/_hlog/lumen.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover with gzip -->
+			<fileNamePattern>${user.home}/lumen_lumen_prd/_hlog/lumen.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+			<!-- keep some history -->
+			<maxHistory>7</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS, Asia/Jakarta} %highlight(%-5level) | %magenta(%-10.-10mdc{tenantId}) | %yellow(%-10.-10mdc{principals}) | %cyan(%-30.30mdc{req.requestURI}) %magenta(%-10.-10mdc{req.queryString}) %15.15mdc{req.xForwardedFor} %-20.-20mdc{req.userAgent} | %magenta(%-16.16thread) %cyan(%-32.32logger{1}) | %msg%n</pattern>
+			<!--pattern>%magenta(%d{HH:mm:ss.SSS}) | %highlight(%-5level) | %magenta(%-16.16thread) | %cyan(%-32.32logger{1}) | %msg%n</pattern-->
+			<!--pattern>%magenta(%d{HH:mm:ss.SSS}) | %highlight(%-5level) | %magenta(%-16.16thread) | %cyan(%-32.32logger{1}) | %cyan(%-32.32class) %yellow(%4line) | %msg%n</pattern-->
+			<!--pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern-->
+		</encoder>
+	</appender> 
+    <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="FILE" />
+    </appender>
+
+	<appender name="TENANT" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<!-- filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter-->
+		<!-- in the absence of the class attribute, it is assumed that the desired 
+			discriminator type is ch.qos.logback.classic.sift.MDCBasedDiscriminator -->
+		<discriminator>
+			<key>tenantId</key>
+			<defaultValue>_app</defaultValue>
+		</discriminator>
+		<sift>
+			<appender name="FILE-${tenantId}"
+				class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<!-- On Windows machines setting withJansi to true enables ANSI color 
+					code interpretation by the Jansi library. This requires org.fusesource.jansi:jansi:1.8 
+					on the class path. Note that Unix-based operating systems such as Linux and 
+					Mac OS X support ANSI color codes by default. -->
+				<withJansi>true</withJansi>
+				<file>${user.home}/lumen_lumen_prd/_log/${tenantId}.log</file>
+				<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+					<!-- daily rollover with gzip -->
+					<fileNamePattern>${user.home}/lumen_lumen_prd/_log/${tenantId}.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+					<!-- keep some history -->
+					<maxHistory>7</maxHistory>
+				</rollingPolicy>
+				<encoder>
+					<pattern>%d{HH:mm:ss.SSS, Asia/Jakarta} %highlight(%-5level) | %yellow(%-10.-10mdc{principals}) | %cyan(%-30.30mdc{req.requestURI}) %magenta(%-10.-10mdc{req.queryString}) %15.15mdc{req.xForwardedFor} %-20.-20mdc{req.userAgent} | %magenta(%-16.16thread) %cyan(%-32.32logger{1}) | %msg%n</pattern>
+					<!--pattern>%magenta(%d{HH:mm:ss.SSS}) | %highlight(%-5level) | %magenta(%-16.16thread) | %cyan(%-32.32logger{1}) | %msg%n</pattern -->
+					<!--pattern>%magenta(%d{HH:mm:ss.SSS}) | %highlight(%-5level) | %magenta(%-16.16thread) | %cyan(%-32.32logger{1}) | %cyan(%-32.32class) %yellow(%4line) | %msg%n</pattern -->
+					<!--pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern -->
+				</encoder>
+			</appender>
+		</sift>
+	</appender>
+    <appender name="ASYNC_TENANT" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="TENANT" />
+    </appender>
+
+	<appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<!-- filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+			<evaluator class="ch.qos.logback.classic.boolex.GEventEvaluator">
+				<expression>
+					e.level.toInt() &gt;= DEBUG.toInt() &amp;&amp;
+					( e.mdc?.get("principals") ==~ /^(rudi|hendy|ingga_bia_putri|ibrahim|hervin|nana|dewi_supriyanti|fera_triana|abdul_11136|cucu_trilestari|disti_sulistyani|erry_sekarwati|evie_novianti|ika_surahmawati|shelly_cavelani|sri_mulyati)$/ )
+				</expression>
+			</evaluator>
+			<OnMismatch>DENY</OnMismatch>
+			<OnMatch>NEUTRAL</OnMatch>
+		</filter-->
+		<!-- filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter-->
+		<!-- in the absence of the class attribute, it is assumed that the desired 
+			discriminator type is ch.qos.logback.classic.sift.MDCBasedDiscriminator -->
+		<discriminator>
+			<key>principals</key>
+			<defaultValue>unknown</defaultValue>
+		</discriminator>
+		<sift>
+			<appender name="FILE-${principals}"
+				class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<!-- On Windows machines setting withJansi to true enables ANSI color 
+					code interpretation by the Jansi library. This requires org.fusesource.jansi:jansi:1.8 
+					on the class path. Note that Unix-based operating systems such as Linux and 
+					Mac OS X support ANSI color codes by default. -->
+				<withJansi>true</withJansi>
+				<file>${user.home}/lumen_lumen_prd/_ulog/${principals}.log</file>
+				<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+					<!-- daily rollover with gzip -->
+					<fileNamePattern>${user.home}/lumen_lumen_prd/_ulog/${principals}.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+					<!-- keep some history -->
+					<maxHistory>7</maxHistory>
+				</rollingPolicy>
+				<encoder>
+					<pattern>%d{HH:mm:ss.SSS, Asia/Jakarta} %highlight(%-5level) | %magenta(%-10.-10mdc{tenantId}) | %cyan(%-30.30mdc{req.requestURI}) %magenta(%-10.-10mdc{req.queryString}) %15.15mdc{req.xForwardedFor} %-20.-20mdc{req.userAgent} | %magenta(%-16.16thread) %cyan(%-32.32logger{1}) | %msg%n</pattern>
+					<!--pattern>%magenta(%d{HH:mm:ss.SSS}) | %highlight(%-5level) | %magenta(%-16.16thread) | %cyan(%-32.32logger{1}) | %msg%n</pattern -->
+					<!--pattern>%magenta(%d{HH:mm:ss.SSS}) | %highlight(%-5level) | %magenta(%-16.16thread) | %cyan(%-32.32logger{1}) | %cyan(%-32.32class) %yellow(%4line) | %msg%n</pattern -->
+					<!--pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern -->
+				</encoder>
+			</appender>
+		</sift>
+	</appender>
+    <appender name="ASYNC_SIFT" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="SIFT" />
+    </appender>
+
+    <appender name="LE" class="com.logentries.logback.LogentriesAppender">
+	    <!-- deny all events with a level below WARN -->
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>WARN</level>
+		</filter>
+        <Debug>False</Debug>
+        <Token>*</Token>
+        <Ssl>False</Ssl>
+        <facility>USER</facility>
+        <layout>
+        	<pattern>%d{HH:mm:ss.SSS, Asia/Jakarta} %-5.5level | %-10.-10mdc{tenantId} | %-10.-10mdc{principals} | %-40.40mdc{req.requestURI} %-20.-20mdc{req.queryString} %15.15mdc{req.xForwardedFor} %-20.-20mdc{req.userAgent} | %-16.16thread | %-32.32logger{1} | %msg%n</pattern>
+        	<!-- pattern>%d{HH:mm:ss.SSS} | %-5.5p | %-16.16t | %-32.32c{1} | %-32.32C %4L | %m%n</pattern-->
+            <!-- pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern-->
+        </layout>
+    </appender>
+
+	<logger name="org.apache.directory.shared" level="INFO" />
+	<logger name="id.co" level="INFO" />
+	<logger name="id.ac" level="DEBUG" />
+	<logger name="org.soluvas" level="INFO" />
+	<logger name="com.soluvas" level="INFO" />
+	<logger name="org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider" level="WARN"/>
+	<logger name="org.springframework.context.annotation.ClassPathBeanDefinitionScanner" level="WARN"/>
+	<logger name="org.apache.wicket.model.LoadableDetachableModel" level="INFO"/>
+	<!-- https://issues.apache.org/jira/browse/SHIRO-461 -->
+	<logger name="org.apache.shiro.realm.AuthorizingRealm" level="WARN"/>
+	<logger name="org.apache.wicket.atmosphere.EventBus" level="WARN"/>
+	<logger name="org.apache.wicket.atmosphere.AtmosphereBehavior" level="WARN"/>
+	<logger name="org.springframework.web.context.support.AnnotationConfigWebApplicationContext" level="WARN"/>
+	<logger name="net.sf.ehcache" level="DEBUG"/>
+	<logger name="org.springframework.cache.annotation" level="DEBUG"/>
+	<logger name="org.springframework.cache.interceptor" level="TRACE"/>
+	<logger name="org.hibernate.SQL" level="DEBUG"/>
+	<logger name="org.hibernate.type" level="INFO"/>
+	<logger name="org.hibernate.tool.hbm2ddl" level="DEBUG"/>
+	<logger name="liquibase" level="DEBUG"/>
+
+	<root level="INFO">
+		<!-- appender-ref ref="STDOUT" /-->
+		<appender-ref ref="ASYNC_TENANT"/>
+		<appender-ref ref="ASYNC_FILE"/>
+		<appender-ref ref="ASYNC_SIFT"/>
+		<appender-ref ref="LE"/>
+	</root>
+
+</configuration>

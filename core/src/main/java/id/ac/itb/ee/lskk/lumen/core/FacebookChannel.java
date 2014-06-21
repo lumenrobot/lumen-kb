@@ -171,7 +171,9 @@ public class FacebookChannel {
 				}
 			}
 		}
-		log.info("{} perceptions: {}", perceptions.size(), perceptions);
+		if (!perceptions.isEmpty()) {
+			log.info("{} perceptions: {}", perceptions.size(), perceptions);
+		}
 		return perceptions;
 	}
 	
@@ -192,7 +194,9 @@ public class FacebookChannel {
 			}
 			actions.add(new FacebookAction(perception.post, perception.replyTo, reply, perception.fromId, perception.fromName));
 		}
-		log.info("{} actions: {}", perceptions.size(), perceptions);
+		if (!actions.isEmpty()) {
+			log.info("{} actions: {}", actions.size(), actions);
+		}
 		return actions;
 	}
 
@@ -207,7 +211,9 @@ public class FacebookChannel {
 			results.add(new FacebookActionResult(action.originalPost, action.destId, action.partnerId, action.partnerName,
 					commented));
 		}
-		log.info("{} results: {}", results.size(), results);
+		if (!results.isEmpty()) {
+			log.info("{} results: {}", results.size(), results);
+		}
 		return results;
 	}
 

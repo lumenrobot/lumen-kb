@@ -17,6 +17,27 @@
 			<groupId>id.ac.itb.ee.lskk</groupId>
 			<artifactId>id.ac.itb.ee.lskk.lumen.web</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-servlet</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-jvm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-logback</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-httpclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-servlets</artifactId>
+		</dependency>
 		
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
@@ -65,11 +86,6 @@
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

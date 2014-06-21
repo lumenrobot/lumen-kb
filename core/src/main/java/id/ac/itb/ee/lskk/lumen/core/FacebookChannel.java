@@ -196,7 +196,7 @@ public class FacebookChannel {
 		return actions;
 	}
 
-	public List<FacebookActionResult> action(
+	public List<FacebookActionResult> respond(
 			List<FacebookAction> actions) {
 		List<FacebookActionResult> results = new ArrayList<>();
 		for (FacebookAction action : actions) {

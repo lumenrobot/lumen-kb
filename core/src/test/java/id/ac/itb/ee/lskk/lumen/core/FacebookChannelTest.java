@@ -64,19 +64,19 @@ public class FacebookChannelTest {
 						+ "\n\nIn Indonesian:"
 						+ "\nAku hendak unta kekuning-kuningan",
 						10152513803701672l, "Hendy Irawan"));
-		List<FacebookActionResult> results = facebookChannel.action(actions);
+		List<FacebookActionResult> results = facebookChannel.respond(actions);
 		log.info("{} actionResults: {}", results.size(), results);
 	}
 	
 	@Test
-	public void pollPerceiveAction() {
+	public void pollPerceiveRespond() {
 		List<FacebookPerception> perceptions = facebookChannel.poll();
 		log.info("{} perceptions: {}", perceptions.size(), perceptions);
 		
 		List<FacebookAction> actions = facebookChannel.perceive(perceptions);
 		log.info("{} actions: {}", actions.size(), actions);
 
-		List<FacebookActionResult> results = facebookChannel.action(actions);
+		List<FacebookActionResult> results = facebookChannel.respond(actions);
 		log.info("{} actionResults: {}", results.size(), results);
 	}
 

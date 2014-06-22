@@ -1,6 +1,7 @@
 package id.ac.itb.ee.lskk.lumen.core;
 
 import id.ac.itb.ee.lskk.relexid.core.RelEx;
+import id.ac.itb.ee.lskk.relexid.core.Relation;
 import id.ac.itb.ee.lskk.relexid.core.Sentence;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.Parameter;
@@ -161,6 +163,15 @@ public class FacebookChannel {
 					}).toList();
 					if (!myReplies.isEmpty()) {
 						log.debug("Post {} has my replies: {}", post.getId(), myReplies);
+						// check if last comment is from me?
+						Comment lastComment = Iterables.getLast(post.getComments().getData());
+						if (sysConfig.getFacebookProfileId() != Long.valueOf(lastComment.getFrom().getId()) &&
+								!StringUtils.equals(sysConfig.getFacebookProfileName(), lastComment.getFrom().getName())) {
+							log.debug("Comment {} from {} {} has not been replied: {}", 
+									lastComment.getId(), lastComment.getFrom().getId(), lastComment.getFrom().getName(), lastComment.getMessage());
+							perceptions.add( new FacebookPerception(post, 
+									Long.valueOf(lastComment.getFrom().getId()), lastComment.getFrom().getName(), lastComment.getMessage(), post.getId()) );
+						}
 					} else {
 						log.debug("Post {} not replied yet", post.getId());
 						perceptions.add( new FacebookPerception(post, Long.valueOf(post.getFrom().getId()), post.getFrom().getName(), post.getMessage(), post.getId()) );
@@ -184,9 +195,13 @@ public class FacebookChannel {
 			try {
 				Sentence sentence = relex.parse(perception.message);
 				reply = "@" + perception.fromName + ":";
-				reply += "\n\nStructure:\n" + sentence.toString();
+				reply += "\n\n" + sentence.toString();
 				reply += "\n\nIn English:\n" + sentence.generate(Locale.ENGLISH, relex.getDictionary(), relex);
 				reply += "\n\nIn Indonesian:\n" + sentence.generate(RelEx.INDONESIAN, relex.getDictionary(), relex);
+				reply += "\n\n" + sentence.getRelations().size() + " grammatical relationships.";
+				for (Relation rel : sentence.getRelations()) {
+					reply += "\n" + rel.toString();
+				}
 			} catch (Exception e) {
 				log.error(String.format("Cannot parse %s %s's status: %s", 
 						perception.fromId, perception.fromName, perception.message), e);

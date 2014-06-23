@@ -17,26 +17,15 @@
 				<include>README*</include>
 				<include>LICENSE*</include>
 				<include>NOTICE*</include>
-				<include>bin/*</include>
 			</includes>
 		</fileSet>
 		<fileSet>
-			<directory>${project.build.directory}</directory>
-			<outputDirectory>/lib</outputDirectory>
-			<includes>
-				<include>*.jar</include>
-			</includes>
+			<directory>${project.build.directory}/appassembler</directory>
+			<outputDirectory>/</outputDirectory>
 		</fileSet>
 		<fileSet>
 			<directory>${project.build.directory}/site</directory>
 			<outputDirectory>docs</outputDirectory>
 		</fileSet>
 	</fileSets>
-	<dependencySets>
-		<dependencySet>
-			<outputDirectory>/lib</outputDirectory>
-			<unpack>false</unpack>
-			<scope>runtime</scope>
-		</dependencySet>
-	</dependencySets>
 </assembly>

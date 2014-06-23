@@ -44,6 +44,20 @@
 	
 	<build>
 		<plugins>
+			<!-- mvn -DskipTests package appassembler:assemble assembly:single -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>1.8</version>
+				<configuration>
+					<programs>
+						<program>
+							<id>lumen</id>
+							<mainClass>id.ac.itb.ee.lskk.lumen.cli.LumenCli</mainClass>
+						</program>
+					</programs>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>

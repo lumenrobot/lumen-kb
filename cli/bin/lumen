@@ -1,0 +1,6 @@
+#!/bin/sh
+LUMEN_HOME=`realpath $(dirname "$0")/..`
+LUMEN_CLASSPATH="$LUMEN_HOME"'/lib/*'
+#echo LUMEN_HOME: "$LUMEN_HOME"
+#echo LUMEN_CLASSPATH: "$LUMEN_CLASSPATH"
+java -cp "$LUMEN_CLASSPATH" id.ac.itb.ee.lskk.lumen.cli.LumenCli "$@"

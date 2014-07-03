@@ -23,6 +23,21 @@ import com.mongodb.MongoClientURI;
 
 /**
  * Import YAGO labels to MongoDB.
+ * 
+ * <pre>
+ * &gt; db.label.find().limit(10)
+ * { "_id" : "Dr._Kuno_Struck_House", "l" : "Dr. Kuno Struck House" }
+ * { "_id" : "Duarte_Coelho_Pereira", "l" : "Duarte Coelho Pereira" }
+ * { "_id" : "The_Still_Alarm", "l" : "The Still Alarm" }
+ * { "_id" : "Smoky_Robin", "l" : "Smoky Robin" }
+ * { "_id" : "K._Natwar_Singh", "l" : "Natwar Singh" }
+ * { "_id" : "Wendy_O._Williams", "l" : "Wendy o" }
+ * { "_id" : "Big_tent", "l" : "Big tent" }
+ * { "_id" : "Omalanthus_stokesii", "l" : "Omalanthus stokesii" }
+ * { "_id" : "Cython", "l" : "Cython" }
+ * { "_id" : "Rajiv_Mishra", "l" : "Rajiv Mishra" }
+ * </pre>
+ * 
  * @author ceefour
  */
 public class YagoLabelsToMongo {

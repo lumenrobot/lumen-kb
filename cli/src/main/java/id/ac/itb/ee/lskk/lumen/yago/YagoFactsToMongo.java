@@ -26,6 +26,21 @@ import com.mongodb.MongoClientURI;
 
 /**
  * Import YAGO facts to MongoDB. 4484914 facts in about 1.5 minutes.
+ * 
+ * <pre>
+ * &gt; db.fact.find().limit(10)
+ * { "_id" : "id_1bcczro_1s2_pc2dz5", "s" : "Lenílson_Porto_Peixoto", "p" : "isAffiliatedTo", "o" : "América_Futebol_Clube_(SP)" }
+ * { "_id" : "id_jqyg1z_zkl_1xi58gi", "s" : "Jefferson_County,_Texas", "p" : "owns", "o" : "Jack_Brooks_Regional_Airport" }
+ * { "_id" : "id_zw0wm0_1s2_1b1jycx", "s" : "Tom_Hartley", "p" : "isAffiliatedTo", "o" : "Sinn_Féin" }
+ * { "_id" : "id_f258yz_1gi_15sq7rt", "s" : "Tony_Gibson", "p" : "created", "o" : "Ghetto_Blaster_(video_game)" }
+ * { "_id" : "id_6z0jld_ice_qhtymo", "s" : "Mänttä-Vilppula", "p" : "hasWebsite", "o" : "http://www.manttavilppula.fi" }
+ * { "_id" : "id_ha2a9a_1s2_4mobd4", "s" : "Luis_Carlos_Martín", "p" : "isAffiliatedTo", "o" : "Real_Murcia_Imperial" }
+ * { "_id" : "id_tbw8rw_p3m_zkjp59", "s" : "William_I,_Duke_of_Bavaria", "p" : "hasGender", "o" : "male" }
+ * { "_id" : "id_1e7i0ut_1gi_50uey2", "s" : "Paul_Redford", "p" : "created", "o" : "The_Portland_Trip" }
+ * { "_id" : "id_c6ds23_1ul_q9yabg", "s" : "Jean-Claude_Darcheville", "p" : "playsFor", "o" : "Kavala_F.C." }
+ * { "_id" : "id_1rx0dux_z7a_rhd6l5", "s" : "Kumamoto_Prefectural_Theater", "p" : "isLocatedIn", "o" : "Kumamoto_Prefecture" }
+ * </pre>
+ * 
  * @author ceefour
  */
 public class YagoFactsToMongo {

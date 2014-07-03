@@ -87,11 +87,12 @@ public class GenerateRandomYagoFactTests {
 			final BasicDBObject queryObj = new BasicDBObject("p", rule.getProperty());
 			
 			// Attempt 1 : Fact
-			try (DBCursor cursor = factColl.find(queryObj, new BasicDBObject(ImmutableMap.of("s", true, "o", true)))) {
-				int foundCount = cursor.count();
-				if (foundCount >= 1) {
-					int factIdx = RandomUtils.nextInt(0, foundCount);
-					DBObject factObj = cursor.skip(factIdx).limit(1).next();
+			int foundFactCount = (int) factColl.count(queryObj);
+			if (foundFactCount >= 1) {
+				int factIdx = RandomUtils.nextInt(0, foundFactCount);
+				final BasicDBObject projection = new BasicDBObject(ImmutableMap.of("s", true, "o", true));
+				try (DBCursor cursor = factColl.find(queryObj, projection).skip(factIdx).limit(1)) {
+					DBObject factObj = cursor.next();
 					final Fact fact;
 					final String subjectName = (String) factObj.get("s");
 					final String objectName = (String) factObj.get("o");
@@ -116,24 +117,23 @@ public class GenerateRandomYagoFactTests {
 					} else {
 						fact = new Fact(subjectName, rule.getProperty(), objectName);
 					}
-					log.debug("Got fact #{} of {}: {}", factIdx, foundCount, fact);
+					log.debug("Got fact #{} of {}: {}", factIdx, foundFactCount, fact);
 					System.out.println(String.format(rule.getQuestionTemplate_en(), fact.getSubjectLabel()));
 					System.out.println("  " + String.format(rule.getAnswerTemplate_en(), fact.getSubjectLabel(), fact.getObjectLabel()));
 					System.out.println(String.format(rule.getQuestionTemplate_id(), fact.getSubjectLabel()));
 					System.out.println("  " + String.format(rule.getAnswerTemplate_id(), fact.getSubjectLabel(), fact.getObjectLabel()));
 					testCount++;
 					continue;
-				} else {
-					log.trace("No facts match for {} using {}", rule, queryObj);
 				}
 			}
 			
 			// Attempt 2 : Literal Fact
-			try (DBCursor cursor = literalFactColl.find(queryObj, new BasicDBObject(ImmutableMap.of("s", true, "l", true, "u", true)))) {
-				int foundCount = cursor.count();
-				if (foundCount >= 1) {
-					int factIdx = RandomUtils.nextInt(0, foundCount);
-					DBObject factObj = cursor.skip(factIdx).limit(1).next();
+			int foundLiteralFactCount = (int) literalFactColl.count(queryObj);
+			if (foundLiteralFactCount >= 1) {
+				int factIdx = RandomUtils.nextInt(0, foundLiteralFactCount);
+				final BasicDBObject projection = new BasicDBObject(ImmutableMap.of("s", true, "l", true, "u", true));
+				try (DBCursor cursor = literalFactColl.find(queryObj, projection).skip(factIdx).limit(1)) {
+					DBObject factObj = cursor.next();
 					final String subjectName = (String) factObj.get("s");
 					final Object literal = factObj.get("l");
 					String unit = (String) factObj.get("u");
@@ -150,7 +150,7 @@ public class GenerateRandomYagoFactTests {
 						subjectLabel = subjectName;
 					}
 					LiteralFact literalFact = new LiteralFact(subjectName, subjectLabel, rule.getProperty(), literal, unit);
-					log.debug("Got literal fact #{} of {}: {}", factIdx, foundCount, literalFact);
+					log.debug("Got literal fact #{} of {}: {}", factIdx, foundLiteralFactCount, literalFact);
 					if (unit == null) {
 						System.out.println(String.format(rule.getQuestionTemplate_en(), literalFact.getSubjectLabel()));
 						System.out.println("  " + String.format(rule.getAnswerTemplate_en(), literalFact.getSubjectLabel(), literalFact.getLiteral()));
@@ -232,12 +232,10 @@ public class GenerateRandomYagoFactTests {
 					}
 					testCount++;
 					continue;
-				} else {
-					log.warn("No facts nor literal facts match for {} using {}", rule, queryObj);
-					continue;
 				}
 			}
 			
+			log.warn("No facts nor literal facts match for {} using {}", rule, queryObj);
 		}
 	}
 

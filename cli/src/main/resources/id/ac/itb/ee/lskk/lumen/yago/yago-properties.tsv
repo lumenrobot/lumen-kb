@@ -28,7 +28,7 @@
 "directed"	"What movies did %s direct?"	"%s menyutradarai film apa?"	"%s directed %s."	"%s menyutradarai %s."
 "hasInflation"	"How much is %s's inflation?"	"Berapa inflasi %s?"	"%s's inflation is %s."	"Inflasi %s adalah %s."
 "wasBornIn"	"Where was %s born?"	"Di mana %s dilahirkan?"	"%s was born in %s."	"%s lahir di %s."
-"actedIn"	"What movies star %s?"	"Film apa saja yang dimainkan %s?"	"%s acted in %s."	"%s bermain dalam %s."
+"actedIn"	"What movies star %s?"	"Film apa saja yang dibintangi %s?"	"%s acted in %s."	"%s membintangi %s."
 "isMarriedTo"	"Who did %s marry?"	"Siapa pasangan %s?"	"%s is married to %s."	"%s menikahi %s."
 "livesIn"	"Where does %s live?"	"%s tinggal di mana?"	"%s lives in %s."	"%s tinggal di %s."
 "isLeaderOf"	"What does %s lead?"	"%s memimpin apa?"	"%s is a leader of %s."	"%s adalah pemimpin %s."

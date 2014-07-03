@@ -1,4 +1,4 @@
-package id.ac.itb.ee.lskk.lumen.cli;
+package id.ac.itb.ee.lskk.lumen.yago;
 
 import java.io.File;
 import java.io.FileNotFoundException;

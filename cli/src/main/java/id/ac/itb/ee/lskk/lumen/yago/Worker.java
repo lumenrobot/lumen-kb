@@ -20,6 +20,7 @@ public class Worker {
 
 			GridCache<String, YagoRule> cache = grid.cache("yagoRules");
 			cache.loadCache(null, 0);
+			log.info("I have {} primary out of {} entries", cache.primarySize(), cache.size());
 			
 			Thread.currentThread().join();
 		}

@@ -1,6 +1,9 @@
 package id.ac.itb.ee.lskk.lumen.yago;
 
+import org.gridgain.grid.cache.query.GridCacheQuerySqlField;
+
 public class YagoRule {
+	@GridCacheQuerySqlField(index=true)
 	String property;
 	String questionPattern_en;
 	String questionPattern_id;

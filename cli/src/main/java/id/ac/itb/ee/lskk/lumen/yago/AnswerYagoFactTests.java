@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.FluentIterable;
 
 /**
  * Answer YAGO fact tests.
@@ -56,15 +57,15 @@ public class AnswerYagoFactTests {
 	 * @throws GridException 
 	 */
 	public static void main(String[] args) throws FileNotFoundException, IOException, GridException {
-		String msg = "Where was Michael Jackson born?";
-		Pattern testPattern = Pattern.compile("Where was (?<subject>.+) born\\?", Pattern.CASE_INSENSITIVE);
-		log.info("Test pattern matches? {}", testPattern.matcher(msg).matches());
+//		String msg = "Where was Michael Jackson born?";
+		String msg = "Di mana Michael Jackson dilahirkan?";
+//		Pattern testPattern = Pattern.compile("Where was (?<subject>.+) born\\?", Pattern.CASE_INSENSITIVE);
+//		log.info("Test pattern matches? {}", testPattern.matcher(msg).matches());
 		
 		try (Grid grid = GridGain.start(AnswerYagoFactTests.class.getResource("yago.gridgain.xml"))) {
 			
 			GridCache<String, YagoRule> cache = grid.cache("yagoRules");
-			cache.loadCache(null, 0);
-			cache.forceRepartition().get();
+//			cache.loadCache(null, 0);
 			grid.compute().broadcast(new Runnable() {
 				@Override
 				public void run() {
@@ -78,42 +79,55 @@ public class AnswerYagoFactTests {
 			}).get();
 
 			log.info("wasBornIn is {}", cache.get("wasBornIn"));
-			grid.compute().apply(new GridClosure<String, String>() {
+			
+			log.info("Found {} YAGO rules", cache.size());
+			Set<String> ruleIds = FluentIterable.from(cache.queries().createSqlFieldsQuery("SELECT property FROM YagoRule").execute().get())
+					.<String>transform((it) -> (String) it.iterator().next()).toSet();
+			log.info("{} Rule IDs to process: {}", ruleIds.size(), ruleIds);
+			
+			MatchedYagoRule foundMatcher = grid.compute().apply(new GridClosure<String, MatchedYagoRule>() {
 				@Override
-				public String apply(String e) {
-					log.info("Found {} YAGO rules", cache.size());
-					Set<String> ruleIds = cache.keySet();
-//					Collection<GridFuture<Matcher>> matchers = Collections2.transform(ruleIds, (ruleId) -> 
-//						grid.compute().<Matcher>affinityCall(cache.name(), ruleId, (GridCallable<Matcher>) () -> {
-//							final YagoRule rule = cache.get(ruleId);
-//							log.info("Processing rule #{} {}", ruleId, rule);
-//							Pattern pattern = Pattern.compile(rule.questionPattern_en, Pattern.CASE_INSENSITIVE);
-//							Matcher matcher = pattern.matcher(msg);
-//							if (matcher.matches()) {
-//								return matcher;
-//							} else {
-//								return null;
-//							}
-//						}) );
-					Collection<GridFuture<MatchedYagoRule>> matchers = Collections2.transform(ruleIds, (ruleId) ->
-						grid.compute().affinityCall(cache.name(), ruleId, 
-							new GridCallable<MatchedYagoRule>() {
-								@Override
-								public MatchedYagoRule call()
-										throws Exception {
-									final YagoRule rule = cache.get(ruleId);
-									Pattern pattern = Pattern.compile(rule.questionPattern_en, Pattern.CASE_INSENSITIVE);
-									Matcher matcher = pattern.matcher(msg);
-									if (matcher.matches()) {
-										log.info("MATCH {} Processing rule #{} {}", matcher, ruleId, rule.property);
-										return new MatchedYagoRule(rule, matcher.group("subject"));
-									} else {
-										log.info("not match Processing rule #{} {}", ruleId, rule.property);
-										return null;
-									}
-								}
-							}) );
+				public MatchedYagoRule apply(String e) {
 					try {
+	//					cache.queries().createScanQuery(null).execute(new GridClosure<E, R>, args)
+	//					Set<String> ruleIds = cache.keySet();
+	//					Collection<GridFuture<Matcher>> matchers = Collections2.transform(ruleIds, (ruleId) -> 
+	//						grid.compute().<Matcher>affinityCall(cache.name(), ruleId, (GridCallable<Matcher>) () -> {
+	//							final YagoRule rule = cache.get(ruleId);
+	//							log.info("Processing rule #{} {}", ruleId, rule);
+	//							Pattern pattern = Pattern.compile(rule.questionPattern_en, Pattern.CASE_INSENSITIVE);
+	//							Matcher matcher = pattern.matcher(msg);
+	//							if (matcher.matches()) {
+	//								return matcher;
+	//							} else {
+	//								return null;
+	//							}
+	//						}) );
+						Collection<GridFuture<MatchedYagoRule>> matchers = Collections2.transform(ruleIds, (ruleId) ->
+							grid.compute().affinityCall(cache.name(), ruleId, 
+								new GridCallable<MatchedYagoRule>() {
+									@Override
+									public MatchedYagoRule call()
+											throws Exception {
+										final YagoRule rule = cache.get(ruleId);
+										Pattern pattern_en = Pattern.compile(rule.questionPattern_en, Pattern.CASE_INSENSITIVE);
+										Matcher matcher_en = pattern_en.matcher(msg);
+										if (matcher_en.matches()) {
+											log.info("MATCH English {} Processing rule {} {}", matcher_en, ruleId, rule.questionPattern_en);
+											return new MatchedYagoRule(rule, matcher_en.group("subject"));
+										} else {
+											Pattern pattern_id = Pattern.compile(rule.questionPattern_id, Pattern.CASE_INSENSITIVE);
+											Matcher matcher_id = pattern_id.matcher(msg);
+											if (matcher_id.matches()) {
+												log.info("MATCH Indonesian {} Processing rule {} {}", matcher_id, ruleId, rule.questionPattern_en);
+												return new MatchedYagoRule(rule, matcher_id.group("subject"));
+											} else {
+												log.info("not match Processing rule {} {}", ruleId, rule.questionPattern_en);
+												return null;
+											}
+										}
+									}
+								}) );
 						MatchedYagoRule foundMatcher = F.awaitAll(0, new GridReducer<MatchedYagoRule, MatchedYagoRule>() {
 							MatchedYagoRule obj;
 							@Override
@@ -132,21 +146,27 @@ public class AnswerYagoFactTests {
 						}, matchers);
 						log.info("Found matcher: {}", foundMatcher);
 						if (foundMatcher != null) {
-							log.info("Subject: {}", foundMatcher);
+							return foundMatcher;
 						}
 					} catch (GridException e1) {
 						Throwables.propagate(e1);
 					}
+					return null;
 //					cache.forEach(new GridInClosure<GridCacheEntry<Integer,YagoRule>>() {
 //						@Override
 //						public void apply(GridCacheEntry<Integer, YagoRule> e) {
 //							log.info("Processing rule #{} {}", e.getKey(), e.getValue());
 //						}
 //					});
-					return null;
 				}
 			}, msg).get();
-			
+
+			if (foundMatcher != null) {
+				log.info("Subject: {} from {}", foundMatcher.subject, foundMatcher);
+			} else {
+				log.info("NOT FOUND!");
+			}
+
 //			MongoClient mongo = new MongoClient(new MongoClientURI("mongodb://localhost/"));
 //			DB db = mongo.getDB("yago_dev");
 //			DBCollection factColl = db.getCollection("fact");

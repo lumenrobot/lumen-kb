@@ -48,7 +48,7 @@
 
         <!-- Set to true to enable grid-aware class loading for examples, default is false. -->
         <property name="peerClassLoadingEnabled" value="true"/>
-	    <property name="deploymentMode" value="CONTINUOUS"/>
+	    <property name="deploymentMode" value="SHARED"/>
 
         <property name="marshaller">
             <bean class="org.gridgain.grid.marshaller.optimized.GridOptimizedMarshaller">
@@ -74,6 +74,23 @@
                     <property name="backups" value="1"/>
                     <property name="store">
                     	<bean class="id.ac.itb.ee.lskk.lumen.yago.YagoRuleCacheStore"/>
+                    </property>
+                </bean>
+
+                <bean parent="cache-template">
+                    <property name="name" value="yagoLabel"/>
+                    <property name="cacheMode" value="PARTITIONED"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="distributionMode" value="PARTITIONED_ONLY"/>
+                    <property name="backups" value="1"/>
+                    <property name="store">
+                    	<bean class="id.ac.itb.ee.lskk.lumen.yago.YagoLabelCacheStore"/>
+                    </property>
+                    <property name="swapEnabled" value="true"/>
+                    <property name="evictionPolicy">
+                    	<bean class="org.gridgain.grid.cache.eviction.lru.GridCacheLruEvictionPolicy">
+                    		<property name="maxSize" value="100000"/>
+                    	</bean>
                     </property>
                 </bean>
 

@@ -18,9 +18,21 @@ public class Worker {
 	public static void main(String[] args) throws FileNotFoundException, IOException, GridException, InterruptedException {
 		try (Grid grid = GridGain.start(Worker.class.getResource("yago.gridgain.xml"))) {
 
-			GridCache<String, YagoRule> cache = grid.cache("yagoRules");
-			cache.loadCache(null, 0);
-			log.info("I have {} primary out of {} entries", cache.primarySize(), cache.size());
+			GridCache<String, YagoRule> ruleCache = grid.cache("yagoRules");
+			if (ruleCache.isEmpty()) {
+				log.info("Loading rules...");
+				ruleCache.loadCache(null, 0);
+			}
+			log.info("For yagoRule, I have {} primary out of {} entries + {} swap", 
+					ruleCache.primarySize(), ruleCache.size(), ruleCache.swapKeys());
+			
+			GridCache<String, String> labelCache = grid.cache("yagoLabel");
+			if (labelCache.isEmpty()) {
+				log.info("Loading labels...");
+				labelCache.loadCache(null, 0);
+			}
+			log.info("For yagoLabel, I have {} primary out of {} entries + {} swap", 
+					labelCache.primarySize(), labelCache.size(), labelCache.swapKeys());
 			
 			Thread.currentThread().join();
 		}

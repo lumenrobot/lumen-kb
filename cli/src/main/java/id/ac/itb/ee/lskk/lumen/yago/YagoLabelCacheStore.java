@@ -54,7 +54,7 @@ public class YagoLabelCacheStore extends GridCacheStoreAdapter<String, String> {
 					log.debug("  [{}%] {} labels loaded, {} more to go...", applied * 100 / cnt, applied, cnt - applied); 
 				}
 			}
-			log.info("Loaded {} labels...", cnt);
+			log.info("Loaded {} labels.", cnt);
 		}
 	}
 

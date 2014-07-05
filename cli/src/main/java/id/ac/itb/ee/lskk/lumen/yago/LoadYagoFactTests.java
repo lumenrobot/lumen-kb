@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
 
 /**
  * Generate random YAGO fact tests.
@@ -63,8 +64,10 @@ public class LoadYagoFactTests {
 				URL yagoRulesTsv = LoadYagoFactTests.class.getResource("yago-rules.tsv");
 				log.info("Loading '{}'...", yagoRulesTsv);
 				int ruleIdx = 0;
+				// LibreOffice doesn't use \ as escape character
 				try (CSVReader reader = new CSVReader(
-						new InputStreamReader(yagoRulesTsv.openStream(), StandardCharsets.UTF_8), '\t')) {
+						new InputStreamReader(yagoRulesTsv.openStream(), StandardCharsets.UTF_8),
+							'\t', CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.NO_ESCAPE_CHARACTER)) {
 					reader.readNext(); // skip heading
 					while (true) {
 						String[] row = reader.readNext();

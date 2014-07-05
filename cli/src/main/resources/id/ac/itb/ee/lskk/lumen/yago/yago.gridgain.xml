@@ -72,6 +72,9 @@
                     <property name="atomicityMode" value="ATOMIC"/>
                     <property name="distributionMode" value="PARTITIONED_ONLY"/>
                     <property name="backups" value="1"/>
+                    <property name="store">
+                    	<bean class="id.ac.itb.ee.lskk.lumen.yago.YagoRuleCacheStore"/>
+                    </property>
                 </bean>
 
                 <!-- Partitioned cache example configuration (Atomic mode). -->

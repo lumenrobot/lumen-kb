@@ -2,6 +2,7 @@ package id.ac.itb.ee.lskk.lumen.yago;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Locale;
@@ -23,9 +24,18 @@ import org.joda.money.format.MoneyFormatterBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.MustacheFactory;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableMap;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 
 /**
  * Answer YAGO fact tests.
@@ -49,6 +59,7 @@ public class AnswerYagoFactTests {
 	private static final NumberFormat ID_PCT = NumberFormat.getPercentInstance(INDONESIAN);
 	private static final MoneyFormatter MONEY_EN = new MoneyFormatterBuilder().appendCurrencySymbolLocalized().appendAmountLocalized().toFormatter(ENGLISH);
 	private static final MoneyFormatter MONEY_ID = new MoneyFormatterBuilder().appendCurrencySymbolLocalized().appendAmountLocalized().toFormatter(INDONESIAN);
+	private static final MustacheFactory MF = new DefaultMustacheFactory();
 	
 	/**
 	 * @param args yagoFacts.tsv file
@@ -58,30 +69,33 @@ public class AnswerYagoFactTests {
 	 */
 	public static void main(String[] args) throws FileNotFoundException, IOException, GridException {
 //		String msg = "Where was Michael Jackson born?";
-		String msg = "Di mana Michael Jackson dilahirkan?";
+		String msg = "Di mana Einstein dilahirkan?";
 //		Pattern testPattern = Pattern.compile("Where was (?<subject>.+) born\\?", Pattern.CASE_INSENSITIVE);
 //		log.info("Test pattern matches? {}", testPattern.matcher(msg).matches());
 		
 		try (Grid grid = GridGain.start(AnswerYagoFactTests.class.getResource("yago.gridgain.xml"))) {
 			
-			GridCache<String, YagoRule> cache = grid.cache("yagoRules");
-//			cache.loadCache(null, 0);
+			GridCache<String, YagoRule> ruleCache = grid.cache("yagoRules");
+			if (ruleCache.isEmpty()) {
+				log.info("Loading rules...");
+				ruleCache.loadCache(null, 0);
+			}
 			grid.compute().broadcast(new Runnable() {
 				@Override
 				public void run() {
 					try {
 						log.info("Cache formerly has size={} offheap={} overflow={}",
-								cache.size(), cache.offHeapEntriesCount(), cache.overflowSize());
+								ruleCache.size(), ruleCache.offHeapEntriesCount(), ruleCache.overflowSize());
 					} catch (GridException e) {
 						log.error("Cannot get overflow size", e);
 					}
 				}
 			}).get();
 
-			log.info("wasBornIn is {}", cache.get("wasBornIn"));
+			log.info("wasBornIn is {}", ruleCache.get("wasBornIn"));
 			
-			log.info("Found {} YAGO rules", cache.size());
-			Set<String> ruleIds = FluentIterable.from(cache.queries().createSqlFieldsQuery("SELECT property FROM YagoRule").execute().get())
+			log.info("Found {} YAGO rules", ruleCache.size());
+			Set<String> ruleIds = FluentIterable.from(ruleCache.queries().createSqlFieldsQuery("SELECT property FROM YagoRule").execute().get())
 					.<String>transform((it) -> (String) it.iterator().next()).toSet();
 			log.info("{} Rule IDs to process: {}", ruleIds.size(), ruleIds);
 			
@@ -104,12 +118,12 @@ public class AnswerYagoFactTests {
 	//							}
 	//						}) );
 						Collection<GridFuture<MatchedYagoRule>> matchers = Collections2.transform(ruleIds, (ruleId) ->
-							grid.compute().affinityCall(cache.name(), ruleId, 
+							grid.compute().affinityCall(ruleCache.name(), ruleId, 
 								new GridCallable<MatchedYagoRule>() {
 									@Override
 									public MatchedYagoRule call()
 											throws Exception {
-										final YagoRule rule = cache.get(ruleId);
+										final YagoRule rule = ruleCache.get(ruleId);
 										Pattern pattern_en = Pattern.compile(rule.questionPattern_en, Pattern.CASE_INSENSITIVE);
 										Matcher matcher_en = pattern_en.matcher(msg);
 										if (matcher_en.matches()) {
@@ -163,16 +177,57 @@ public class AnswerYagoFactTests {
 
 			if (foundMatcher != null) {
 				log.info("Subject: {} from {}", foundMatcher.subject, foundMatcher);
+				
+				MongoClient mongo = new MongoClient(new MongoClientURI("mongodb://localhost/"));
+				DB db = mongo.getDB("yago_dev");
+				DBCollection factColl = db.getCollection("fact");
+				DBCollection literalFactColl = db.getCollection("literalFact");
+				DBCollection labelColl = db.getCollection("label");
+				log.debug("Finding resource for label '{}'...", foundMatcher.subject);
+				DBObject dbo = labelColl.findOne(new BasicDBObject("l", Pattern.compile("^" + Pattern.quote(foundMatcher.subject.toLowerCase()) + "$", Pattern.CASE_INSENSITIVE)),
+						new BasicDBObject("_id", true));
+				if (dbo != null) {
+					final String resId = (String) dbo.get("_id");
+					log.debug("Found resource '{}' for label '{}'.", resId, foundMatcher.subject);
+					
+					DBObject literalFactObj = literalFactColl.findOne(new BasicDBObject( ImmutableMap.of("s", resId, "p", foundMatcher.rule.property) ),
+							new BasicDBObject( ImmutableMap.of("_id", false, "l", true, "u", true)));
+					if (literalFactObj != null) {
+						final Object literalObj = literalFactObj.get("l");
+						final String unit = (String) literalFactObj.get("u");
+						final StringWriter sw_en = new StringWriter();
+						MF.compile(foundMatcher.rule.answerTemplateHtml_en).run(sw_en, 
+								new Object[] { ImmutableMap.of("subject", foundMatcher.subject, "object", literalObj + " " + unit) });
+						final StringWriter sw_id = new StringWriter();
+						MF.compile(foundMatcher.rule.answerTemplateHtml_id).run(sw_id, 
+								new Object[] { ImmutableMap.of("subject", foundMatcher.subject, "object", literalObj + " " + unit) });
+						log.info("English: {}", sw_en);
+						log.info("Indonesian: {}", sw_id);
+					} else {
+						DBObject factObj = factColl.findOne(new BasicDBObject( ImmutableMap.of("s", resId, "p", foundMatcher.rule.property) ),
+								new BasicDBObject( ImmutableMap.of("_id", false, "o", true)));
+						if (factObj != null) {
+							final String factId = (String) factObj.get("o");
+							final StringWriter sw_en = new StringWriter();
+							MF.compile(foundMatcher.rule.answerTemplateHtml_en).run(sw_en, 
+									new Object[] { ImmutableMap.of("subject", foundMatcher.subject, "object", factId) });
+							final StringWriter sw_id = new StringWriter();
+							MF.compile(foundMatcher.rule.answerTemplateHtml_id).run(sw_id, 
+									new Object[] { ImmutableMap.of("subject", foundMatcher.subject, "object", factId) });
+							log.info("English: {}", sw_en);
+							log.info("Indonesian: {}", sw_id);
+						} else {
+							log.info("I don't know");
+						}
+					}
+					
+				} else {
+					log.info("No resource for label '{}'.", foundMatcher.subject);
+				}
 			} else {
 				log.info("NOT FOUND!");
 			}
 
-//			MongoClient mongo = new MongoClient(new MongoClientURI("mongodb://localhost/"));
-//			DB db = mongo.getDB("yago_dev");
-//			DBCollection factColl = db.getCollection("fact");
-//			DBCollection literalFactColl = db.getCollection("literalFact");
-//			DBCollection labelColl = db.getCollection("label");
-			
 		}
 		
 	}

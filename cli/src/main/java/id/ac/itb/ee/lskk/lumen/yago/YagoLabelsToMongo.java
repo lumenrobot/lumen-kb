@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.gridgain.grid.Grid;
+import org.gridgain.grid.GridException;
+import org.gridgain.grid.GridGain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,8 +63,9 @@ public class YagoLabelsToMongo {
 	 * @param args yagoFacts.tsv file
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
+	 * @throws GridException 
 	 */
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+	public static void main(String[] args) throws FileNotFoundException, IOException, GridException {
 		Preconditions.checkArgument(args.length == 1, "Usage: yagolabels2mongo path/to/yagoLabels.ttl");
 		File yagoFactLabelsTsvFile = new File(args[0]);
 		log.info("Importing '{}'...", yagoFactLabelsTsvFile);
@@ -71,34 +75,41 @@ public class YagoLabelsToMongo {
 		log.info("Dropping {} collection...", labelColl.getName());
 		labelColl.drop();
 		log.info("{} collection dropped", labelColl.getName());
-		int labelCount = 0;
-		try (CSVReader reader = new CSVReader(new FileReader(yagoFactLabelsTsvFile), '\t', CSVWriter.NO_QUOTE_CHARACTER)) {
-			while (true) {
-				String[] row = reader.readNext();
-				if (row == null || row.length == 0) {
-					break;
-				}
-				Matcher matcher = ENG.matcher(row[3]);
-				if (!matcher.matches()) {
-					continue;
-				}
-				final String label = matcher.group(1);
-				final String resName = removeBrackets(row[1]);
-				BasicDBObject dbo = new BasicDBObject(ImmutableMap.of(
-						"_id", resName,
-						"l", label));
-				try {
-					labelColl.insert(dbo);
-					labelCount++;
-				} catch (Exception e) {
-					log.trace("Not adding duplicate " + resName + ": " + label, e);
-				}
-				if (labelCount % 10000 == 0) {
-					log.info("Inserted {} labels", labelCount);
+		
+		try (Grid grid = GridGain.start(AnswerYagoFactTests.class.getResource("yago.gridgain.xml"))) {
+//			GridCache<String, YagoRule> labelCache = grid.cache("yagoLabel");
+//			labelCache.removeAll();
+			
+			int labelCount = 0;
+			try (CSVReader reader = new CSVReader(new FileReader(yagoFactLabelsTsvFile), '\t', CSVWriter.NO_QUOTE_CHARACTER)) {
+				while (true) {
+					String[] row = reader.readNext();
+					if (row == null || row.length == 0) {
+						break;
+					}
+					Matcher matcher = ENG.matcher(row[3]);
+					if (!matcher.matches()) {
+						continue;
+					}
+					final String label = matcher.group(1);
+					final String resName = removeBrackets(row[1]);
+					BasicDBObject dbo = new BasicDBObject(ImmutableMap.of(
+							"_id", resName,
+							"l", label));
+					try {
+						labelColl.insert(dbo);
+						labelCount++;
+					} catch (Exception e) {
+						log.trace("Not adding duplicate " + resName + ": " + label, e);
+					}
+					if (labelCount % 10000 == 0) {
+						log.info("Inserted {} labels", labelCount);
+					}
 				}
 			}
+			log.info("Inserted {} labels", labelCount);
 		}
-		log.info("Inserted {} labels", labelCount);
+		
 	}
 
 }

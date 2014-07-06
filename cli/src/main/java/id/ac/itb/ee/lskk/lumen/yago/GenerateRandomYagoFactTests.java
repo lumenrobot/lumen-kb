@@ -3,23 +3,12 @@ package id.ac.itb.ee.lskk.lumen.yago;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.time.Year;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.commons.lang3.RandomUtils;
-import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
-import org.joda.money.format.MoneyFormatter;
-import org.joda.money.format.MoneyFormatterBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,17 +29,9 @@ import com.mongodb.MongoClientURI;
  */
 public class GenerateRandomYagoFactTests {
 
-	private static final Locale ENGLISH = Locale.forLanguageTag("en-US");
-	private static final Locale INDONESIAN = Locale.forLanguageTag("id-ID");
 	private static final Logger log = LoggerFactory
 			.getLogger(GenerateRandomYagoFactTests.class);
 	private static final boolean LOOKUP_LABEL = true;
-	private static final NumberFormat EN_NUM = NumberFormat.getNumberInstance(ENGLISH);
-	private static final NumberFormat ID_NUM = NumberFormat.getNumberInstance(INDONESIAN);
-	private static final NumberFormat EN_PCT = NumberFormat.getPercentInstance(ENGLISH);
-	private static final NumberFormat ID_PCT = NumberFormat.getPercentInstance(INDONESIAN);
-	private static final MoneyFormatter MONEY_EN = new MoneyFormatterBuilder().appendCurrencySymbolLocalized().appendAmountLocalized().toFormatter(ENGLISH);
-	private static final MoneyFormatter MONEY_ID = new MoneyFormatterBuilder().appendCurrencySymbolLocalized().appendAmountLocalized().toFormatter(INDONESIAN);
 	
 	/**
 	 * @param args yagoFacts.tsv file
@@ -151,85 +132,12 @@ public class GenerateRandomYagoFactTests {
 					}
 					LiteralFact literalFact = new LiteralFact(subjectName, subjectLabel, rule.getProperty(), literal, unit);
 					log.debug("Got literal fact #{} of {}: {}", factIdx, foundLiteralFactCount, literalFact);
-					if (unit == null) {
-						System.out.println(String.format(rule.getQuestionTemplate_en(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_en(), literalFact.getSubjectLabel(), literalFact.getLiteral()));
-						System.out.println(String.format(rule.getQuestionTemplate_id(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_id(), literalFact.getSubjectLabel(), literalFact.getLiteral()));
-					} else if ("yago0to100".equals(unit)) {
-						System.out.println(String.format(rule.getQuestionTemplate_en(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_en(), literalFact.getSubjectLabel(),
-								EN_PCT.format(Double.parseDouble(literalFact.getLiteral().toString()) / 100) ));
-						System.out.println(String.format(rule.getQuestionTemplate_id(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_id(), literalFact.getSubjectLabel(), 
-								ID_PCT.format(Double.parseDouble(literalFact.getLiteral().toString())  / 100) ));
-					} else if ("xsd:nonNegativeInteger".equals(unit)) {
-						System.out.println(String.format(rule.getQuestionTemplate_en(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_en(), literalFact.getSubjectLabel(),
-								EN_NUM.format(literalFact.getLiteral()) ));
-						System.out.println(String.format(rule.getQuestionTemplate_id(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_id(), literalFact.getSubjectLabel(), 
-								ID_NUM.format(literalFact.getLiteral()) ));
-					} else if ("degrees".equals(unit)) {
-						System.out.println(String.format(rule.getQuestionTemplate_en(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_en(), literalFact.getSubjectLabel(),
-								EN_NUM.format(literalFact.getLiteral()) + "°"));
-						System.out.println(String.format(rule.getQuestionTemplate_id(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_id(), literalFact.getSubjectLabel(), 
-								ID_NUM.format(literalFact.getLiteral()) + "°"));
-					} else if ("dollar".equals(unit)) {
-						Money money = Money.of(CurrencyUnit.USD, new BigDecimal(literalFact.getLiteral().toString()));
-						System.out.println(String.format(rule.getQuestionTemplate_en(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_en(), literalFact.getSubjectLabel(),
-								MONEY_EN.print(money) ));
-						System.out.println(String.format(rule.getQuestionTemplate_id(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_id(), literalFact.getSubjectLabel(), 
-								MONEY_ID.print(money) ));
-					} else if ("euro".equals(unit)) {
-						Money money = Money.of(CurrencyUnit.EUR, new BigDecimal(literalFact.getLiteral().toString()));
-						System.out.println(String.format(rule.getQuestionTemplate_en(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_en(), literalFact.getSubjectLabel(),
-								MONEY_EN.print(money) ));
-						System.out.println(String.format(rule.getQuestionTemplate_id(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_id(), literalFact.getSubjectLabel(), 
-								MONEY_ID.print(money) ));
-					} else if ("yagoMonetaryValue".equals(unit)) {
-						// TODO: currency
-						System.out.println(String.format(rule.getQuestionTemplate_en(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_en(), literalFact.getSubjectLabel(),
-								EN_NUM.format(literalFact.getLiteral()) ));
-						System.out.println(String.format(rule.getQuestionTemplate_id(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_id(), literalFact.getSubjectLabel(), 
-								ID_NUM.format(literalFact.getLiteral()) ));
-					} else if (literal instanceof Number) {
-						System.out.println(String.format(rule.getQuestionTemplate_en(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_en(), literalFact.getSubjectLabel(),
-								EN_NUM.format(literalFact.getLiteral()) + " " + literalFact.getUnit() ));
-						System.out.println(String.format(rule.getQuestionTemplate_id(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_id(), literalFact.getSubjectLabel(), 
-								ID_NUM.format(literalFact.getLiteral()) + " " + literalFact.getUnit() ));
-					} else if ("xsd:date".equals(unit)) {
-						String dateStr_en = (String) literalFact.getLiteral();
-						String dateStr_id = (String) literalFact.getLiteral();
-						try {
-							LocalDate localDate = LocalDate.parse((String) literalFact.getLiteral());
-							dateStr_en = localDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(ENGLISH));
-							dateStr_id = localDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(INDONESIAN));
-						} catch (Exception e) {
-							Year year = Year.parse(((String) literalFact.getLiteral()).substring(0, 4));
-							dateStr_en = "year " + year.toString();
-							dateStr_id = "tahun " + year.toString();
-						}
-						System.out.println(String.format(rule.getQuestionTemplate_en(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_en(), literalFact.getSubjectLabel(), dateStr_en ));
-						System.out.println(String.format(rule.getQuestionTemplate_id(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_id(), literalFact.getSubjectLabel(), dateStr_id ));
-					} else {
-						System.out.println(String.format(rule.getQuestionTemplate_en(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_en(), literalFact.getSubjectLabel(), literalFact.getLiteral() + " " + literalFact.getUnit() ));
-						System.out.println(String.format(rule.getQuestionTemplate_id(), literalFact.getSubjectLabel()));
-						System.out.println("  " + String.format(rule.getAnswerTemplate_id(), literalFact.getSubjectLabel(), literalFact.getLiteral() + " " + literalFact.getUnit() ));
-					}
+					System.out.println(String.format(rule.getQuestionTemplate_en(), literalFact.getSubjectLabel()));
+					String answer_en = LiteralFact.formatLiteralFact_en(rule.getAnswerTemplate_en(), subjectLabel, literal, unit);
+					System.out.println("  " + answer_en);
+					System.out.println(String.format(rule.getQuestionTemplate_id(), literalFact.getSubjectLabel()));
+					String answer_id = LiteralFact.formatLiteralFact_id(rule.getAnswerTemplate_id(), subjectLabel, literal, unit);
+					System.out.println("  " + answer_id);
 					testCount++;
 					continue;
 				}

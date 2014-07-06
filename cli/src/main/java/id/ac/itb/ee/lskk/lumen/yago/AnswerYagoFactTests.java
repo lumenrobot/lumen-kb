@@ -4,9 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.text.NumberFormat;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,8 +20,6 @@ import org.gridgain.grid.lang.GridCallable;
 import org.gridgain.grid.lang.GridClosure;
 import org.gridgain.grid.lang.GridReducer;
 import org.gridgain.grid.util.typedef.F;
-import org.joda.money.format.MoneyFormatter;
-import org.joda.money.format.MoneyFormatterBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,17 +49,8 @@ import com.mongodb.MongoClientURI;
  */
 public class AnswerYagoFactTests {
 
-	private static final Locale ENGLISH = Locale.forLanguageTag("en-US");
-	private static final Locale INDONESIAN = Locale.forLanguageTag("id-ID");
 	private static final Logger log = LoggerFactory
 			.getLogger(AnswerYagoFactTests.class);
-	private static final boolean LOOKUP_LABEL = true;
-	private static final NumberFormat EN_NUM = NumberFormat.getNumberInstance(ENGLISH);
-	private static final NumberFormat ID_NUM = NumberFormat.getNumberInstance(INDONESIAN);
-	private static final NumberFormat EN_PCT = NumberFormat.getPercentInstance(ENGLISH);
-	private static final NumberFormat ID_PCT = NumberFormat.getPercentInstance(INDONESIAN);
-	private static final MoneyFormatter MONEY_EN = new MoneyFormatterBuilder().appendCurrencySymbolLocalized().appendAmountLocalized().toFormatter(ENGLISH);
-	private static final MoneyFormatter MONEY_ID = new MoneyFormatterBuilder().appendCurrencySymbolLocalized().appendAmountLocalized().toFormatter(INDONESIAN);
 	private static final MustacheFactory MF = new DefaultMustacheFactory();
 	
 	/**
@@ -75,7 +62,9 @@ public class AnswerYagoFactTests {
 	public static void main(String[] args) throws FileNotFoundException, IOException, GridException {
 //		String msg = "Where was Michael Jackson born?";
 //		String msg = "Di mana Muhammad dilahirkan?";
-		String msg = "Dmna Michael Jackson lahir";
+//		String msg = "Dmna Michael Jackson lahir";
+//		String msg = "berapa populasi Indonesia";
+		String msg = "kapan Lady gaga lahir";
 //		String msg = "Kapan Michael Jackson dilahirkan?";
 //		Pattern testPattern = Pattern.compile("Where was (?<subject>.+) born\\?", Pattern.CASE_INSENSITIVE);
 //		log.info("Test pattern matches? {}", testPattern.matcher(msg).matches());
@@ -206,14 +195,11 @@ public class AnswerYagoFactTests {
 					if (literalFactObj != null) {
 						final Object literalObj = literalFactObj.get("l");
 						final String unit = (String) literalFactObj.get("u");
-						final StringWriter sw_en = new StringWriter();
-						MF.compile(new StringReader(foundMatcher.rule.answerTemplateHtml_en), "en").run(sw_en, 
-								new Object[] { ImmutableMap.of("subject", foundMatcher.subject, "object", literalObj + " " + unit) });
-						final StringWriter sw_id = new StringWriter();
-						MF.compile(new StringReader(foundMatcher.rule.answerTemplateHtml_id), "id").run(sw_id, 
-								new Object[] { ImmutableMap.of("subject", foundMatcher.subject, "object", literalObj + " " + unit) });
-						log.info("English: {}", sw_en);
-						log.info("Indonesian: {}", sw_id);
+//						LiteralFact literalFact = new LiteralFact(resId, foundMatcher.subject, foundMatcher.rule.property, literalObj, unit);
+						String answer_en = LiteralFact.formatLiteralFact_en(foundMatcher.rule.answerTemplateHtml_en, foundMatcher.subject, literalObj, unit);  
+						String answer_id = LiteralFact.formatLiteralFact_id(foundMatcher.rule.answerTemplateHtml_id, foundMatcher.subject, literalObj, unit);
+						log.info("English: {}", answer_en);
+						log.info("Indonesian: {}", answer_id);
 					} else {
 						DBObject factObj = factColl.findOne(new BasicDBObject( ImmutableMap.of("s", resId, "p", foundMatcher.rule.property) ),
 								new BasicDBObject( ImmutableMap.of("_id", false, "o", true)));

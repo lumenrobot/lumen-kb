@@ -10,7 +10,7 @@ public class YagoLabel {
 	@Nullable
 	private String prefLabel;
 	@Nullable
-	private String label;
+	private Set<String> labels;
 	@Nullable
 	private Set<String> preferredMeaningLabels;
 	@Nullable
@@ -22,15 +22,16 @@ public class YagoLabel {
 		super();
 	}
 
-	public YagoLabel(String prefLabel, String label, @Nullable Set<String> preferredMeaningLabels, String givenName, String familyName) {
+	public YagoLabel(String prefLabel, Set<String> labels, @Nullable Set<String> preferredMeaningLabels, String givenName, String familyName) {
 		super();
 		this.prefLabel = prefLabel;
-		this.label = label;
+		this.labels = labels;
 		this.preferredMeaningLabels = preferredMeaningLabels;
 		this.givenName = givenName;
 		this.familyName = familyName;
 	}
 	
+	@Nullable
 	public String getPrefLabel() {
 		return prefLabel;
 	}
@@ -39,14 +40,18 @@ public class YagoLabel {
 		this.prefLabel = prefLabel;
 	}
 	
-	public String getLabel() {
-		return label;
+	@Nullable
+	public Set<String> getLabels() {
+		return labels;
 	}
 	
-	public void setLabel(String label) {
-		this.label = label;
+	public void addLabel(String labelText) {
+		if (labels == null) {
+			labels = new HashSet<>();
+		}
+		labels.add(labelText);
 	}
-
+	
 	/**
 	 * @return the preferredMeaningLabels
 	 */
@@ -62,6 +67,7 @@ public class YagoLabel {
 		preferredMeaningLabels.add(labelText);
 	}
 	
+	@Nullable
 	public String getGivenName() {
 		return givenName;
 	}
@@ -70,6 +76,7 @@ public class YagoLabel {
 		this.givenName = givenName;
 	}
 	
+	@Nullable
 	public String getFamilyName() {
 		return familyName;
 	}

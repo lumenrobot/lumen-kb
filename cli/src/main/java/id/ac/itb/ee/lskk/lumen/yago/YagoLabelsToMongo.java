@@ -30,35 +30,35 @@ import com.mongodb.MongoClientURI;
  * 
  * <pre>
  * &gt; db.label.find().limit(10)
- * { "_id" : "Vlaško_Polje", "l" : "Vlaşca" }
- * { "_id" : "Gargilesse-Dampierre", "p" : "Gargilesse-Dampierre" }
- * { "_id" : "Horseshoe_Falls_(Wales)", "p" : "Horseshoe Falls (Wales)", "l" : "Horseshoe Falls" }
- * { "_id" : "Vadim_Pankratov", "p" : "Vadim Pankratov", "l" : "Vadim Pankratov", "f" : "Pankratov" }
- * { "_id" : "Iori_Nomizu", "p" : "Iori Nomizu", "f" : "Nomizu" }
- * { "_id" : "Beaujolais_(wine)", "p" : "Beaujolais (wine)", "l" : "Regnie AOC" }
- * { "_id" : "Sturt_County", "p" : "Sturt County", "l" : "Sturt County" }
- * { "_id" : "Jake_Scott_(guard)", "p" : "Jake Scott (guard)", "l" : "Jake Scott (Indianapolis Colts player)" }
- * { "_id" : "Ghiordes_knot", "p" : "Ghiordes knot" }
- * { "_id" : "Carmen_Apicala", "p" : "Carmen Apicala", "l" : "Carmen Apicala" }
+ * { "_id" : "Elwood_Engel", "f" : "Engel" }
+ * { "_id" : "Vlaško_Polje", "l" : [ "Vlasko Polje" ] }
+ * { "_id" : "Gargilesse-Dampierre", "m" : [ "Gargilesse-Dampierre" ] }
+ * { "_id" : "Horseshoe_Falls_(Wales)", "l" : [ "Horseshoe Falls (Wales)" ] }
+ * { "_id" : "Jerome_H._Remick", "f" : "Remick" }
+ * { "_id" : "Vadim_Pankratov", "l" : [ "Vadim Pankratov" ] }
+ * { "_id" : "Iori_Nomizu", "m" : [ "Iori Nomizu" ] }
+ * { "_id" : "Sturt_County", "l" : [ "Sturt County, New South Wales" ] }
+ * { "_id" : "Lazăr_Șăineanu", "l" : [ "Șeineanu", "Lazăr Schein", "Lazăr Shain" ] }
+ * { "_id" : "Rajiv_Mishra", "l" : [ "Rajiv Mishra" ] }
  * </pre> 
  * 
  * <pre>
  * &gt; db.label.find({m: {$size: 2}}).limit(10)
+ * { "_id" : "wordnet_finality_104754440", "m" : [ "conclusiveness", "finality" ] }
+ * { "_id" : "wordnet_safety_blitz_100976085", "m" : [ "blitz", "safety blitz" ] }
+ * { "_id" : "wordnet_olecranon_105593654", "m" : [ "olecranon process", "olecranon" ] }
+ * { "_id" : "wordnet_short_sale_100079908", "m" : [ "short sale", "short selling" ] }
  * { "_id" : "wordnet_slice_100572043", "m" : [ "slicing", "fade" ] }
- * { "_id" : "wordnet_secobarbital_sodium_104163740", "m" : [ "red devil", "secobarbital sodium" ] }
- * { "_id" : "wordnet_lipemia_114193925", "l" : "hyperlipoidemia", "m" : [ "lipemia", "lipoidaemia" ] }
- * { "_id" : "wordnet_orchard_grass_112116429", "m" : [ "cocksfoot", "orchard grass" ] }
- * { "_id" : "wordnet_computer_expert_109950917", "m" : [ "computer guru", "computer expert" ] }
- * { "_id" : "wordnet_boom_107377682", "l" : "thunder", "m" : [ "boom", "roar" ] }
- * { "_id" : "wordnet_father_110080869", "m" : [ "father", "begetter" ] }
- * { "_id" : "wordnet_throwster_110709745", "m" : [ "thrower", "throwster" ] }
- * { "_id" : "wordnet_merestone_107259438", "m" : [ "mearstone", "merestone" ] }
- * { "_id" : "wordnet_creep_109976917", "l" : "creep", "m" : [ "weirdo", "spook" ] }
+ * { "_id" : "wordnet_system_call_106587217", "m" : [ "system call", "supervisor call instruction" ] }
+ * { "_id" : "wordnet_gyrfalcon_101611800", "m" : [ "gyrfalcon", "gerfalcon" ] }
+ * { "_id" : "wordnet_eastern_chipmunk_102359915", "m" : [ "striped squirrel", "eastern chipmunk" ] }
+ * { "_id" : "wordnet_mesoderm_101464077", "m" : [ "mesoblast", "mesoderm" ] }
+ * { "_id" : "wordnet_beach_wagon_102814533", "m" : [ "station waggon", "beach wagon" ] }
  * </pre>
  * 
  * _id: concept ID
  * p: skos:prefLabel
- * l: rdfs:label
+ * l: [rdfs:label1, ...]
  * m (preferredMeaningLabels): [preferredMeaningLabel1, preferredMeaningLabel2, ...]
  * g: givenName
  * f: familyName
@@ -135,7 +135,7 @@ public class YagoLabelsToMongo {
 							label.setPrefLabel(labelText);
 							break;
 						case "rdfs:label":
-							label.setLabel(labelText);
+							label.addLabel(labelText);
 							break;
 						case "hasGivenName":
 							label.setGivenName(labelText);

@@ -89,7 +89,7 @@
 						<bean class="id.ac.itb.ee.lskk.lumen.yago.YagoLabelCacheStore" />
 					</property>
 					<property name="writeBehindEnabled" value="true" />
-					<property name="writeBehindFlushSize" value="102390" />
+					<property name="writeBehindFlushSize" value="102380" />
 					<property name="writeBehindFlushFrequency" value="30000" />
 					<property name="writeBehindBatchSize" value="10240" />
 					<property name="swapEnabled" value="false" />

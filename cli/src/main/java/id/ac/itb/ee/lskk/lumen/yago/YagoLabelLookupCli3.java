@@ -25,7 +25,7 @@ public class YagoLabelLookupCli3 {
 //			labelCache.queries().createScanQuery(null).execute((GridClosure<Entry<String, String>, String>) (it) ->
 //				it.getValue().equalsIgnoreCase(upLabel) ? it.getKey() : null);
 			log.info("Finding resource for label '{}'...", upLabel);
-			entityByLabelCache.removex(upLabel);
+//			entityByLabelCache.removex(upLabel);
 			ListMultimap<String, String> entities = entityByLabelCache.get(upLabel);
 			log.info("Found for {}: {}", upLabel, entities);
 		}

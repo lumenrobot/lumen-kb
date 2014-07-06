@@ -51,8 +51,9 @@ public class YagoEntityByLabelCacheStore extends GridCacheStoreAdapter<String, L
 	}
 	
 	protected YagoLabel toYagoLabel(DBObject dbo) {
-		Set<String> preferredMeaningLabels = dbo.containsField("pml") ? new HashSet<>((List<String>) dbo.get("pml")) : null;
-		final YagoLabel label = new YagoLabel((String) dbo.get("p"), (String) dbo.get("l"), preferredMeaningLabels,
+		Set<String> labels = dbo.containsField("l") ? new HashSet<>((List<String>) dbo.get("l")) : null;
+		Set<String> preferredMeaningLabels = dbo.containsField("m") ? new HashSet<>((List<String>) dbo.get("m")) : null;
+		final YagoLabel label = new YagoLabel((String) dbo.get("p"), labels, preferredMeaningLabels,
 				(String) dbo.get("g"), (String) dbo.get("f"));
 		return label;
 	}
@@ -87,7 +88,7 @@ public class YagoEntityByLabelCacheStore extends GridCacheStoreAdapter<String, L
 						labelResult.get("_").add(0, entityId);
 					} else if (!labelResult.get("_").contains(entityId)) {
 						if (StringUtils.equalsIgnoreCase(key, label.getPrefLabel()) ||
-								StringUtils.equalsIgnoreCase(key, label.getLabel()) ||
+								label.getLabels().stream().anyMatch( (it) -> it.equalsIgnoreCase(key) ) ||
 								StringUtils.equalsIgnoreCase(key, label.getGivenName()) ||
 								StringUtils.equalsIgnoreCase(key, label.getFamilyName()) ) {
 							labelResult.get("_").add(entityId);

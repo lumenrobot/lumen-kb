@@ -72,8 +72,9 @@ public class YagoLabelCacheStore extends GridCacheStoreAdapter<String, YagoLabel
 	}
 
 	protected YagoLabel toYagoLabel(DBObject dbo) {
+		Set<String> labels = dbo.containsField("l") ? new HashSet<>((List<String>) dbo.get("l")) : null;
 		Set<String> preferredMeaningLabels = dbo.containsField("m") ? new HashSet<>((List<String>) dbo.get("m")) : null;
-		final YagoLabel label = new YagoLabel((String) dbo.get("p"), (String) dbo.get("l"), preferredMeaningLabels,
+		final YagoLabel label = new YagoLabel((String) dbo.get("p"), labels, preferredMeaningLabels,
 				(String) dbo.get("g"), (String) dbo.get("f"));
 		return label;
 	}
@@ -125,8 +126,8 @@ public class YagoLabelCacheStore extends GridCacheStoreAdapter<String, YagoLabel
 		if (val.getPrefLabel() != null) {
 			dbo.put("p", val.getPrefLabel());
 		}
-		if (val.getLabel() != null) {
-			dbo.put("l", val.getLabel());
+		if (val.getLabels() != null) {
+			dbo.put("l", val.getLabels());
 		}
 		if (val.getPreferredMeaningLabels() != null) {
 			dbo.put("m", val.getPreferredMeaningLabels());

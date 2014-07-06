@@ -10,6 +10,8 @@ import org.gridgain.grid.cache.GridCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ListMultimap;
+
 public class Worker {
 
 	private static final Logger log = LoggerFactory
@@ -27,12 +29,20 @@ public class Worker {
 					ruleCache.primarySize(), ruleCache.size(), ruleCache.swapKeys());
 			
 			GridCache<String, String> labelCache = grid.cache("yagoLabel");
-			if (labelCache.isEmpty()) {
-				log.info("Loading labels...");
-				labelCache.loadCache(null, 0);
-			}
+//			if (labelCache.isEmpty()) {
+//				log.info("Loading labels...");
+//				labelCache.loadCache(null, 0);
+//			}
 			log.info("For yagoLabel, I have {} primary out of {} entries + {} swap", 
 					labelCache.primarySize(), labelCache.size(), labelCache.swapKeys());
+			
+			GridCache<String, ListMultimap<String, String>> entityByLabelCache = grid.cache("yagoEntityByLabel");
+//			if (labelCache.isEmpty()) {
+//				log.info("Loading labels...");
+//				labelCache.loadCache(null, 0);
+//			}
+			log.info("For entityByLabel, I have {} primary out of {} entries + {} swap", 
+					entityByLabelCache.primarySize(), entityByLabelCache.size(), entityByLabelCache.swapKeys());
 			
 			Thread.currentThread().join();
 		}

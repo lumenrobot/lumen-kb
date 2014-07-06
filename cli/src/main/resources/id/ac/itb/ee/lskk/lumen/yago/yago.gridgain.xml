@@ -64,9 +64,9 @@
 
 				<bean parent="cache-template">
 					<property name="name" value="yagoEntityByLabel" />
-					<property name="cacheMode" value="PARTITIONED" />
+					<property name="cacheMode" value="REPLICATED" />
 					<property name="atomicityMode" value="ATOMIC" />
-					<property name="distributionMode" value="PARTITIONED_ONLY" />
+					<property name="distributionMode" value="NEAR_PARTITIONED" />
 					<property name="backups" value="1" />
 					<property name="store">
 						<bean class="id.ac.itb.ee.lskk.lumen.yago.YagoEntityByLabelCacheStore" />

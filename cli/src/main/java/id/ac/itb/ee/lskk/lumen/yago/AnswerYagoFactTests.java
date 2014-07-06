@@ -2,6 +2,7 @@ package id.ac.itb.ee.lskk.lumen.yago;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.util.Collection;
@@ -9,6 +10,8 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.annotation.Nullable;
 
 import org.gridgain.grid.Grid;
 import org.gridgain.grid.GridException;
@@ -30,6 +33,8 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.ListMultimap;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -69,7 +74,9 @@ public class AnswerYagoFactTests {
 	 */
 	public static void main(String[] args) throws FileNotFoundException, IOException, GridException {
 //		String msg = "Where was Michael Jackson born?";
-		String msg = "Di mana Einstein dilahirkan?";
+//		String msg = "Di mana Muhammad dilahirkan?";
+		String msg = "Dmna Michael Jackson lahir";
+//		String msg = "Kapan Michael Jackson dilahirkan?";
 //		Pattern testPattern = Pattern.compile("Where was (?<subject>.+) born\\?", Pattern.CASE_INSENSITIVE);
 //		log.info("Test pattern matches? {}", testPattern.matcher(msg).matches());
 		
@@ -182,12 +189,16 @@ public class AnswerYagoFactTests {
 				DB db = mongo.getDB("yago_dev");
 				DBCollection factColl = db.getCollection("fact");
 				DBCollection literalFactColl = db.getCollection("literalFact");
-				DBCollection labelColl = db.getCollection("label");
+//				DBCollection labelColl = db.getCollection("label");
 				log.debug("Finding resource for label '{}'...", foundMatcher.subject);
-				DBObject dbo = labelColl.findOne(new BasicDBObject("l", Pattern.compile("^" + Pattern.quote(foundMatcher.subject.toLowerCase()) + "$", Pattern.CASE_INSENSITIVE)),
-						new BasicDBObject("_id", true));
-				if (dbo != null) {
-					final String resId = (String) dbo.get("_id");
+				
+				GridCache<String, YagoLabel> labelCache = grid.cache("yagoLabel");
+				GridCache<String, ListMultimap<String, String>> entityByLabelCache = grid.cache("yagoEntityByLabel");
+				ListMultimap<String, String> foundEntities = entityByLabelCache.get(foundMatcher.subject.toLowerCase());
+				@Nullable
+				String resId = Iterables.getFirst(foundEntities.get("_"), null);
+				
+				if (resId != null) {
 					log.debug("Found resource '{}' for label '{}'.", resId, foundMatcher.subject);
 					
 					DBObject literalFactObj = literalFactColl.findOne(new BasicDBObject( ImmutableMap.of("s", resId, "p", foundMatcher.rule.property) ),
@@ -196,10 +207,10 @@ public class AnswerYagoFactTests {
 						final Object literalObj = literalFactObj.get("l");
 						final String unit = (String) literalFactObj.get("u");
 						final StringWriter sw_en = new StringWriter();
-						MF.compile(foundMatcher.rule.answerTemplateHtml_en).run(sw_en, 
+						MF.compile(new StringReader(foundMatcher.rule.answerTemplateHtml_en), "en").run(sw_en, 
 								new Object[] { ImmutableMap.of("subject", foundMatcher.subject, "object", literalObj + " " + unit) });
 						final StringWriter sw_id = new StringWriter();
-						MF.compile(foundMatcher.rule.answerTemplateHtml_id).run(sw_id, 
+						MF.compile(new StringReader(foundMatcher.rule.answerTemplateHtml_id), "id").run(sw_id, 
 								new Object[] { ImmutableMap.of("subject", foundMatcher.subject, "object", literalObj + " " + unit) });
 						log.info("English: {}", sw_en);
 						log.info("Indonesian: {}", sw_id);
@@ -208,12 +219,25 @@ public class AnswerYagoFactTests {
 								new BasicDBObject( ImmutableMap.of("_id", false, "o", true)));
 						if (factObj != null) {
 							final String factId = (String) factObj.get("o");
+							YagoLabel objectLabel = labelCache.get(factId);
+							String objectText;
+							if (objectLabel != null) {
+								if (objectLabel.getPrefLabel() != null) {
+									objectText = objectLabel.getPrefLabel();
+								} else if (objectLabel.getLabels() != null) {
+									objectText = objectLabel.getLabels().iterator().next();
+								} else {
+									objectText = factId;
+								}
+							} else {
+								objectText = factId;
+							}
 							final StringWriter sw_en = new StringWriter();
-							MF.compile(foundMatcher.rule.answerTemplateHtml_en).run(sw_en, 
-									new Object[] { ImmutableMap.of("subject", foundMatcher.subject, "object", factId) });
+							MF.compile(new StringReader(foundMatcher.rule.answerTemplateHtml_en), "en").run(sw_en, 
+									new Object[] { ImmutableMap.of("subject", foundMatcher.subject, "object", objectText) });
 							final StringWriter sw_id = new StringWriter();
-							MF.compile(foundMatcher.rule.answerTemplateHtml_id).run(sw_id, 
-									new Object[] { ImmutableMap.of("subject", foundMatcher.subject, "object", factId) });
+							MF.compile(new StringReader(foundMatcher.rule.answerTemplateHtml_id), "id").run(sw_id, 
+									new Object[] { ImmutableMap.of("subject", foundMatcher.subject, "object", objectText) });
 							log.info("English: {}", sw_en);
 							log.info("Indonesian: {}", sw_id);
 						} else {

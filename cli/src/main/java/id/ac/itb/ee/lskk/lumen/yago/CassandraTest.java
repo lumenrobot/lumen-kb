@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Metadata;
+import com.datastax.driver.core.Session;
 
 public class CassandraTest {
 
@@ -18,7 +19,11 @@ public class CassandraTest {
 	public static void main(String[] args) throws FileNotFoundException, IOException, GridException {
 		try (Cluster cluster = Cluster.builder().addContactPoint("127.0.0.1").build()) {
 			Metadata metadata = cluster.getMetadata();
-			log.info("Connected to {}", metadata);
+			log.info("Connected to {} with {} hosts: {}", 
+					metadata.getClusterName(), metadata.getAllHosts().size(), metadata.getAllHosts());
+			try (Session session = cluster.connect("yago_dev")) {
+				session.execute("CREATE TABLE label ( id text PRIMARY KEY, preflabel text, label text, preferredmeaninglabels list<text>, givenname text, familyname text )");
+			}
 		}
 	}
 

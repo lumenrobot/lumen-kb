@@ -2,10 +2,10 @@
  */
 package id.ac.itb.ee.lskk.lumen.core;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
-
-import org.soluvas.socmed.SocmedPackage;
+import org.soluvas.commons.CommonsPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -67,13 +67,58 @@ public interface LumenPackage extends EPackage {
 	int LUMEN_SYS_CONFIG = 0;
 
 	/**
+	 * The feature id for the '<em><b>Expansion State</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LUMEN_SYS_CONFIG__EXPANSION_STATE = CommonsPackage.GENERAL_SYS_CONFIG__EXPANSION_STATE;
+
+	/**
+	 * The feature id for the '<em><b>Creation Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LUMEN_SYS_CONFIG__CREATION_TIME = CommonsPackage.GENERAL_SYS_CONFIG__CREATION_TIME;
+
+	/**
+	 * The feature id for the '<em><b>Modification Time</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LUMEN_SYS_CONFIG__MODIFICATION_TIME = CommonsPackage.GENERAL_SYS_CONFIG__MODIFICATION_TIME;
+
+	/**
+	 * The feature id for the '<em><b>Tenant Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LUMEN_SYS_CONFIG__TENANT_ID = CommonsPackage.GENERAL_SYS_CONFIG__TENANT_ID;
+
+	/**
+	 * The feature id for the '<em><b>Mongo Uri</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LUMEN_SYS_CONFIG__MONGO_URI = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Facebook App Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__FACEBOOK_APP_ID = SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_APP_ID;
+	int LUMEN_SYS_CONFIG__FACEBOOK_APP_ID = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Facebook App Secret</b></em>' attribute.
@@ -82,7 +127,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__FACEBOOK_APP_SECRET = SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_APP_SECRET;
+	int LUMEN_SYS_CONFIG__FACEBOOK_APP_SECRET = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Facebook Tenant Access Token</b></em>' attribute.
@@ -91,7 +136,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__FACEBOOK_TENANT_ACCESS_TOKEN = SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_ACCESS_TOKEN;
+	int LUMEN_SYS_CONFIG__FACEBOOK_TENANT_ACCESS_TOKEN = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Facebook Profile Id</b></em>' attribute.
@@ -100,7 +145,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__FACEBOOK_PROFILE_ID = SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_PROFILE_ID;
+	int LUMEN_SYS_CONFIG__FACEBOOK_PROFILE_ID = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Facebook Profile Username</b></em>' attribute.
@@ -109,7 +154,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__FACEBOOK_PROFILE_USERNAME = SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_PROFILE_USERNAME;
+	int LUMEN_SYS_CONFIG__FACEBOOK_PROFILE_USERNAME = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Facebook Profile Name</b></em>' attribute.
@@ -118,7 +163,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__FACEBOOK_PROFILE_NAME = SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_PROFILE_NAME;
+	int LUMEN_SYS_CONFIG__FACEBOOK_PROFILE_NAME = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Facebook Tenant Page Id</b></em>' attribute.
@@ -127,7 +172,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PAGE_ID = SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_PAGE_ID;
+	int LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PAGE_ID = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Facebook Tenant Page Username</b></em>' attribute.
@@ -136,7 +181,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PAGE_USERNAME = SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_PAGE_USERNAME;
+	int LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PAGE_USERNAME = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Facebook Tenant Publish Enabled</b></em>' attribute.
@@ -145,7 +190,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PUBLISH_ENABLED = SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_PUBLISH_ENABLED;
+	int LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PUBLISH_ENABLED = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Facebook Explicitly Shared</b></em>' attribute.
@@ -154,7 +199,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED = SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED;
+	int LUMEN_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Instagram Screen Name</b></em>' attribute.
@@ -163,7 +208,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__INSTAGRAM_SCREEN_NAME = SocmedPackage.FACEBOOK_SYS_CONFIG_FEATURE_COUNT + 0;
+	int LUMEN_SYS_CONFIG__INSTAGRAM_SCREEN_NAME = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>You Tube Tenant Screen Name</b></em>' attribute.
@@ -172,7 +217,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__YOU_TUBE_TENANT_SCREEN_NAME = SocmedPackage.FACEBOOK_SYS_CONFIG_FEATURE_COUNT + 1;
+	int LUMEN_SYS_CONFIG__YOU_TUBE_TENANT_SCREEN_NAME = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Pinterest Tenant Screen Name</b></em>' attribute.
@@ -181,7 +226,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__PINTEREST_TENANT_SCREEN_NAME = SocmedPackage.FACEBOOK_SYS_CONFIG_FEATURE_COUNT + 2;
+	int LUMEN_SYS_CONFIG__PINTEREST_TENANT_SCREEN_NAME = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Twitter Consumer Key</b></em>' attribute.
@@ -190,7 +235,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__TWITTER_CONSUMER_KEY = SocmedPackage.FACEBOOK_SYS_CONFIG_FEATURE_COUNT + 3;
+	int LUMEN_SYS_CONFIG__TWITTER_CONSUMER_KEY = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Twitter Consumer Secret</b></em>' attribute.
@@ -199,7 +244,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__TWITTER_CONSUMER_SECRET = SocmedPackage.FACEBOOK_SYS_CONFIG_FEATURE_COUNT + 4;
+	int LUMEN_SYS_CONFIG__TWITTER_CONSUMER_SECRET = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Twitter Tenant Screen Name</b></em>' attribute.
@@ -208,7 +253,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__TWITTER_TENANT_SCREEN_NAME = SocmedPackage.FACEBOOK_SYS_CONFIG_FEATURE_COUNT + 5;
+	int LUMEN_SYS_CONFIG__TWITTER_TENANT_SCREEN_NAME = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 16;
 
 	/**
 	 * The feature id for the '<em><b>Twitter Tenant Access Token</b></em>' attribute.
@@ -217,7 +262,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__TWITTER_TENANT_ACCESS_TOKEN = SocmedPackage.FACEBOOK_SYS_CONFIG_FEATURE_COUNT + 6;
+	int LUMEN_SYS_CONFIG__TWITTER_TENANT_ACCESS_TOKEN = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 17;
 
 	/**
 	 * The feature id for the '<em><b>Twitter Tenant Access Token Secret</b></em>' attribute.
@@ -226,7 +271,16 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__TWITTER_TENANT_ACCESS_TOKEN_SECRET = SocmedPackage.FACEBOOK_SYS_CONFIG_FEATURE_COUNT + 7;
+	int LUMEN_SYS_CONFIG__TWITTER_TENANT_ACCESS_TOKEN_SECRET = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 18;
+
+	/**
+	 * The feature id for the '<em><b>Tenant Env</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LUMEN_SYS_CONFIG__TENANT_ENV = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 19;
 
 	/**
 	 * The number of structural features of the '<em>Sys Config</em>' class.
@@ -235,7 +289,16 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG_FEATURE_COUNT = SocmedPackage.FACEBOOK_SYS_CONFIG_FEATURE_COUNT + 8;
+	int LUMEN_SYS_CONFIG_FEATURE_COUNT = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 20;
+
+	/**
+	 * The operation id for the '<em>Expand</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LUMEN_SYS_CONFIG___EXPAND__MAP = CommonsPackage.GENERAL_SYS_CONFIG___EXPAND__MAP;
 
 	/**
 	 * The number of operations of the '<em>Sys Config</em>' class.
@@ -244,7 +307,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG_OPERATION_COUNT = SocmedPackage.FACEBOOK_SYS_CONFIG_OPERATION_COUNT + 0;
+	int LUMEN_SYS_CONFIG_OPERATION_COUNT = CommonsPackage.GENERAL_SYS_CONFIG_OPERATION_COUNT + 0;
 
 
 	/**
@@ -256,6 +319,17 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getLumenSysConfig();
+
+	/**
+	 * Returns the meta object for the attribute '{@link id.ac.itb.ee.lskk.lumen.core.LumenSysConfig#getTenantEnv <em>Tenant Env</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Tenant Env</em>'.
+	 * @see id.ac.itb.ee.lskk.lumen.core.LumenSysConfig#getTenantEnv()
+	 * @see #getLumenSysConfig()
+	 * @generated
+	 */
+	EAttribute getLumenSysConfig_TenantEnv();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -289,6 +363,13 @@ public interface LumenPackage extends EPackage {
 		 * @generated
 		 */
 		EClass LUMEN_SYS_CONFIG = eINSTANCE.getLumenSysConfig();
+		/**
+		 * The meta object literal for the '<em><b>Tenant Env</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LUMEN_SYS_CONFIG__TENANT_ENV = eINSTANCE.getLumenSysConfig_TenantEnv();
 
 	}
 

@@ -52,25 +52,25 @@
 			<list>
 				<!-- Partitioned YAGO rules cache configuration (Atomic mode). -->
 				<bean parent="cache-template">
-					<property name="name" value="yagoRules" />
+					<property name="name" value="yagoRule" />
 					<property name="cacheMode" value="PARTITIONED" />
 					<property name="atomicityMode" value="ATOMIC" />
 					<property name="distributionMode" value="PARTITIONED_ONLY" />
 					<property name="backups" value="1" />
 					<property name="store">
-						<bean class="id.ac.itb.ee.lskk.lumen.yago.YagoRuleCacheStore" />
+						<bean class="id.ac.itb.ee.lskk.lumen.core.yago.YagoRuleCacheStore"/>
 					</property>
 				</bean>
 
 				<bean parent="cache-template">
 					<property name="name" value="yagoEntityByLabel" />
-					<property name="cacheMode" value="REPLICATED" />
-					<property name="atomicityMode" value="ATOMIC" />
+					<property name="cacheMode" value="PARTITIONED" />
+					<property name="atomicityMode" value="TRANSACTIONAL" />
 					<property name="distributionMode" value="NEAR_PARTITIONED" />
 					<property name="backups" value="1" />
-					<property name="store">
-						<bean class="id.ac.itb.ee.lskk.lumen.yago.YagoEntityByLabelCacheStore" />
-					</property>
+<!-- 					<property name="store"> -->
+<!-- 						<bean class="id.ac.itb.ee.lskk.lumen.core.yago.YagoEntityByLabelCacheStore" /> -->
+<!-- 					</property> -->
 					<property name="swapEnabled" value="false" />
 					<property name="evictionPolicy">
 						<bean class="org.gridgain.grid.cache.eviction.lru.GridCacheLruEvictionPolicy">
@@ -86,7 +86,7 @@
 					<property name="distributionMode" value="PARTITIONED_ONLY" />
 					<property name="backups" value="1" />
 					<property name="store">
-						<bean class="id.ac.itb.ee.lskk.lumen.yago.YagoLabelCacheStore" />
+						<bean class="id.ac.itb.ee.lskk.lumen.yago.YagoLabelCacheStore" autowire="byType" init-method="init" />
 					</property>
 					<property name="writeBehindEnabled" value="true" />
 					<property name="writeBehindFlushSize" value="102380" />

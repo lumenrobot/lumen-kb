@@ -1,6 +1,5 @@
-package id.ac.itb.ee.lskk.lumen.yago;
+package id.ac.itb.ee.lskk.lumen.core.yago;
 
-import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +7,9 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.gridgain.grid.GridException;
@@ -28,8 +30,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.ReadPreference;
 
 /**
  * Key: label (lowercase)
@@ -41,12 +42,13 @@ public class YagoEntityByLabelCacheStore extends GridCacheStoreAdapter<String, L
 	
 	private static final Logger log = LoggerFactory
 			.getLogger(YagoEntityByLabelCacheStore.class);
-	private final DBCollection labelColl;
+	private DBCollection labelColl;
 	
-	public YagoEntityByLabelCacheStore() throws UnknownHostException {
-		super();
-		MongoClient mongo = new MongoClient(new MongoClientURI("mongodb://localhost/"));
-		DB db = mongo.getDB("yago_dev");
+	@Inject
+	private DB db;
+	
+	@PostConstruct
+	public void init() {
 		labelColl = db.getCollection("label");
 	}
 	
@@ -75,7 +77,7 @@ public class YagoEntityByLabelCacheStore extends GridCacheStoreAdapter<String, L
 				ImmutableMap.of("f", pattern) );
 		BasicDBObject crit = new BasicDBObject("$or", crits);
 		log.debug("Finding {} : {}", keys, crit);
-		try (DBCursor cursor = labelColl.find(crit)) {
+		try (DBCursor cursor = labelColl.find(crit).setReadPreference(ReadPreference.secondaryPreferred())) {
 			for (DBObject dbo : cursor) {
 				String entityId = (String) dbo.get("_id");
 				final YagoLabel label = toYagoLabel(dbo);

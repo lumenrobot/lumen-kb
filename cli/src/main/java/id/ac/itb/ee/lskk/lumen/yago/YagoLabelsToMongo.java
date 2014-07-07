@@ -1,5 +1,7 @@
 package id.ac.itb.ee.lskk.lumen.yago;
 
+import id.ac.itb.ee.lskk.lumen.core.yago.YagoLabel;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -107,7 +109,7 @@ public class YagoLabelsToMongo {
 		log.info("{} collection dropped", labelColl.getName());
 		
 		try (Grid grid = GridGain.start(AnswerYagoFactTests.class.getResource("yago.gridgain.xml"))) {
-			GridCache<String, YagoLabel> labelCache = grid.cache("yagoLabel");
+			GridCache<String, YagoLabel> labelCache = YagoLabel.cache(grid);
 			labelCache.reloadAll();
 			
 			GridClosure<String[], Void> rowProcessor = (GridClosure<String[], Void>) (it) -> {

@@ -1,5 +1,7 @@
 package id.ac.itb.ee.lskk.lumen.yago;
 
+import id.ac.itb.ee.lskk.lumen.core.yago.YagoRule;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;

@@ -1,4 +1,4 @@
-package id.ac.itb.ee.lskk.lumen.yago;
+package id.ac.itb.ee.lskk.lumen.core.yago;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,7 +28,7 @@ public class YagoRuleCacheStore extends
 	@Override
 	protected Iterator<String[]> inputIterator(Object... args)
 			throws GridException {
-		URL yagoRulesTsv = LoadYagoFactTests.class.getResource("yago-rules.tsv");
+		URL yagoRulesTsv = YagoRuleCacheStore.class.getResource("yago-rules.tsv");
 		log.info("Loading '{}'...", yagoRulesTsv);
 		// LibreOffice doesn't use \ as escape character
 		try (CSVReader reader = new CSVReader(

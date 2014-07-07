@@ -1,4 +1,4 @@
-package id.ac.itb.ee.lskk.lumen.yago;
+package id.ac.itb.ee.lskk.lumen.core.yago;
 
 public class MatchedYagoRule {
 	
@@ -9,6 +9,20 @@ public class MatchedYagoRule {
 		super();
 		this.rule = rule;
 		this.subject = subject;
+	}
+
+	/**
+	 * @return the rule
+	 */
+	public YagoRule getRule() {
+		return rule;
+	}
+
+	/**
+	 * @return the subject
+	 */
+	public String getSubject() {
+		return subject;
 	}
 
 	/* (non-Javadoc)

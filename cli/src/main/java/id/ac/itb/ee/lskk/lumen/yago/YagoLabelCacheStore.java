@@ -1,6 +1,8 @@
 package id.ac.itb.ee.lskk.lumen.yago;
 
-import java.net.UnknownHostException;
+import id.ac.itb.ee.lskk.lumen.core.impl.LumenConfig;
+import id.ac.itb.ee.lskk.lumen.core.yago.YagoLabel;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +11,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import org.gridgain.grid.GridException;
 import org.gridgain.grid.cache.GridCacheTx;
 import org.gridgain.grid.cache.store.GridCacheStoreAdapter;
@@ -16,6 +21,7 @@ import org.gridgain.grid.lang.GridBiInClosure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BulkWriteOperation;
@@ -24,8 +30,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.ReadPreference;
 
 /**
  * Key: resource ID
@@ -37,12 +42,18 @@ public class YagoLabelCacheStore extends GridCacheStoreAdapter<String, YagoLabel
 	
 	private static final Logger log = LoggerFactory
 			.getLogger(YagoLabelCacheStore.class);
-	private final DBCollection labelColl;
+	private DBCollection labelColl;
 	
-	public YagoLabelCacheStore() throws UnknownHostException {
-		super();
-		MongoClient mongo = new MongoClient(new MongoClientURI("mongodb://localhost/"));
-		DB db = mongo.getDB("yago_dev");
+//	@GridSpringResource(resourceName="mongoDb")
+	@Inject
+	private DB db;
+	
+	@PostConstruct
+	public void init() {
+		// FIXME: better workaround? http://stackoverflow.com/questions/24606646/how-to-inject-a-dependency-bean-to-gridcachestore-implementation
+		if (db == null) {
+			db = Preconditions.checkNotNull(LumenConfig.MONGODB, "MongoDB instance required");
+		}
 		labelColl = db.getCollection("label");
 	}
 	
@@ -82,7 +93,8 @@ public class YagoLabelCacheStore extends GridCacheStoreAdapter<String, YagoLabel
 	@Override
 	public void loadAll(GridCacheTx tx, Collection<? extends String> keys,
 			GridBiInClosure<String, YagoLabel> c) throws GridException {
-		try (DBCursor cursor = labelColl.find(new BasicDBObject("_id", ImmutableMap.of("$in", keys)))) {
+		try (DBCursor cursor = labelColl.find(
+				new BasicDBObject("_id", ImmutableMap.of("$in", keys))).setReadPreference(ReadPreference.primary())) {
 			for (DBObject dbo : cursor) {
 				final YagoLabel label = toYagoLabel(dbo);
 				c.apply((String) dbo.get("_id"), label);
@@ -92,7 +104,8 @@ public class YagoLabelCacheStore extends GridCacheStoreAdapter<String, YagoLabel
 	
 	@Override
 	public YagoLabel load(GridCacheTx tx, String key) throws GridException {
-		DBObject dbo = labelColl.findOne(new BasicDBObject("_id", key), new BasicDBObject(ImmutableMap.of("_id", false)));
+		DBObject dbo = labelColl.findOne(new BasicDBObject("_id", key), new BasicDBObject(ImmutableMap.of("_id", false)), 
+				ReadPreference.primary());
 		if (dbo != null) {
 			return toYagoLabel(dbo);
 		} else {

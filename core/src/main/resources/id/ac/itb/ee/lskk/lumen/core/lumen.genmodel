@@ -3,7 +3,7 @@
     modelDirectory="/id.ac.itb.ee.lskk.lumen.core/src/main/java" modelPluginID="id.ac.itb.ee.lskk.lumen.core"
     modelName="Lumen" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     importerID="org.eclipse.emf.importer.ecore" bundleManifest="false" complianceLevel="7.0"
-    suppressGenModelAnnotations="false" copyrightFields="false" usedGenPackages="../../../../../../../../../../../org.soluvas.socmed/src/main/resources/org/soluvas/socmed/socmed.genmodel#//socmed"
+    suppressGenModelAnnotations="false" copyrightFields="false" usedGenPackages="../../../../../../../../../../../org.soluvas.commons/src/main/resources/org/soluvas/commons/commons.genmodel#//commons ../../../../../../../../../../../org.soluvas.socmed/src/main/resources/org/soluvas/socmed/socmed.genmodel#//socmed"
     operationReflection="true" importOrganizing="true">
   <foreignModel>lumen.ecore</foreignModel>
   <genPackages prefix="Lumen" basePackage="id.ac.itb.ee.lskk.lumen" disposableProviderFactory="true"

@@ -1,4 +1,4 @@
-package id.ac.itb.ee.lskk.lumen.yago;
+package id.ac.itb.ee.lskk.lumen.core.yago;
 
 import java.io.StringReader;
 import java.io.StringWriter;

@@ -13,25 +13,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.google.common.collect.ListMultimap;
-
-public class YagoLabelLookupCli3 {
+public class YagoSimpleLabelLookupCli {
 
 	private static final Logger log = LoggerFactory
-			.getLogger(YagoLabelLookupCli3.class);
+			.getLogger(YagoSimpleLabelLookupCli.class);
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException, GridException {
-		String upLabel = "Muhammad";
+		String entityId = "Muhammad";
 		
 		try (AnnotationConfigApplicationContext appCtx = new AnnotationConfigApplicationContext(LumenConfig.class)) {
 			Grid grid = appCtx.getBean(Grid.class);
-			GridCache<String, ListMultimap<String, String>> entityByLabelCache = YagoLabel.entityByLabelCache(grid);
-//			labelCache.queries().createScanQuery(null).execute((GridClosure<Entry<String, String>, String>) (it) ->
-//				it.getValue().equalsIgnoreCase(upLabel) ? it.getKey() : null);
-			log.info("Finding resource for label '{}'...", upLabel);
-//			entityByLabelCache.removex(upLabel);
-			ListMultimap<String, String> entities = entityByLabelCache.get(upLabel);
-			log.info("Found for {}: {}", upLabel, entities);
+			GridCache<String, YagoLabel> labelCache = YagoLabel.cache(grid);
+			log.info("Label for {}: {}", entityId, labelCache.get(entityId));
 		}
 		
 	}

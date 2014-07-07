@@ -4,14 +4,13 @@ package id.ac.itb.ee.lskk.lumen.core.impl;
 
 import id.ac.itb.ee.lskk.lumen.core.LumenPackage;
 import id.ac.itb.ee.lskk.lumen.core.LumenSysConfig;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
+import org.soluvas.commons.CommonsPackage;
+import org.soluvas.commons.MongoSysConfig;
+import org.soluvas.commons.impl.GeneralSysConfigImpl;
+import org.soluvas.socmed.FacebookSysConfig;
 import org.soluvas.socmed.InstagramSysConfig;
 import org.soluvas.socmed.PinterestSysConfig;
 import org.soluvas.socmed.SocmedPackage;
@@ -25,6 +24,7 @@ import org.soluvas.socmed.YouTubeSysConfig;
  * <p>
  * The following features are implemented:
  * <ul>
+ *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getMongoUri <em>Mongo Uri</em>}</li>
  *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getFacebookAppId <em>Facebook App Id</em>}</li>
  *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getFacebookAppSecret <em>Facebook App Secret</em>}</li>
  *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getFacebookTenantAccessToken <em>Facebook Tenant Access Token</em>}</li>
@@ -43,12 +43,33 @@ import org.soluvas.socmed.YouTubeSysConfig;
  *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getTwitterTenantScreenName <em>Twitter Tenant Screen Name</em>}</li>
  *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getTwitterTenantAccessToken <em>Twitter Tenant Access Token</em>}</li>
  *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getTwitterTenantAccessTokenSecret <em>Twitter Tenant Access Token Secret</em>}</li>
+ *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getTenantEnv <em>Tenant Env</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements LumenSysConfig {
+public class LumenSysConfigImpl extends GeneralSysConfigImpl implements LumenSysConfig {
+	/**
+	 * The default value of the '{@link #getMongoUri() <em>Mongo Uri</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMongoUri()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String MONGO_URI_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getMongoUri() <em>Mongo Uri</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMongoUri()
+	 * @generated
+	 * @ordered
+	 */
+	protected String mongoUri = MONGO_URI_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #getFacebookAppId() <em>Facebook App Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -217,7 +238,7 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 * @ordered
 	 */
-	protected static final Boolean FACEBOOK_TENANT_PUBLISH_ENABLED_EDEFAULT = java.lang.Boolean.FALSE;
+	protected static final Boolean FACEBOOK_TENANT_PUBLISH_ENABLED_EDEFAULT = Boolean.FALSE;
 
 	/**
 	 * The cached value of the '{@link #getFacebookTenantPublishEnabled() <em>Facebook Tenant Publish Enabled</em>}' attribute.
@@ -237,7 +258,7 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 * @ordered
 	 */
-	protected static final Boolean FACEBOOK_EXPLICITLY_SHARED_EDEFAULT = java.lang.Boolean.FALSE;
+	protected static final Boolean FACEBOOK_EXPLICITLY_SHARED_EDEFAULT = Boolean.FALSE;
 
 	/**
 	 * The cached value of the '{@link #getFacebookExplicitlyShared() <em>Facebook Explicitly Shared</em>}' attribute.
@@ -410,6 +431,26 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 	protected String twitterTenantAccessTokenSecret = TWITTER_TENANT_ACCESS_TOKEN_SECRET_EDEFAULT;
 
 	/**
+	 * The default value of the '{@link #getTenantEnv() <em>Tenant Env</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTenantEnv()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String TENANT_ENV_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getTenantEnv() <em>Tenant Env</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTenantEnv()
+	 * @generated
+	 * @ordered
+	 */
+	protected String tenantEnv = TENANT_ENV_EDEFAULT;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -426,6 +467,27 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 	@Override
 	protected EClass eStaticClass() {
 		return LumenPackage.Literals.LUMEN_SYS_CONFIG;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getMongoUri() {
+		return mongoUri;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setMongoUri(String newMongoUri) {
+		String oldMongoUri = mongoUri;
+		mongoUri = newMongoUri;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, LumenPackage.LUMEN_SYS_CONFIG__MONGO_URI, oldMongoUri, mongoUri));
 	}
 
 	/**
@@ -811,9 +873,32 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getTenantEnv() {
+		return tenantEnv;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setTenantEnv(String newTenantEnv) {
+		String oldTenantEnv = tenantEnv;
+		tenantEnv = newTenantEnv;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, LumenPackage.LUMEN_SYS_CONFIG__TENANT_ENV, oldTenantEnv, tenantEnv));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case LumenPackage.LUMEN_SYS_CONFIG__MONGO_URI:
+				return getMongoUri();
 			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_APP_ID:
 				return getFacebookAppId();
 			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_APP_SECRET:
@@ -850,6 +935,8 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 				return getTwitterTenantAccessToken();
 			case LumenPackage.LUMEN_SYS_CONFIG__TWITTER_TENANT_ACCESS_TOKEN_SECRET:
 				return getTwitterTenantAccessTokenSecret();
+			case LumenPackage.LUMEN_SYS_CONFIG__TENANT_ENV:
+				return getTenantEnv();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -862,6 +949,9 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case LumenPackage.LUMEN_SYS_CONFIG__MONGO_URI:
+				setMongoUri((String)newValue);
+				return;
 			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_APP_ID:
 				setFacebookAppId((Long)newValue);
 				return;
@@ -916,6 +1006,9 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 			case LumenPackage.LUMEN_SYS_CONFIG__TWITTER_TENANT_ACCESS_TOKEN_SECRET:
 				setTwitterTenantAccessTokenSecret((String)newValue);
 				return;
+			case LumenPackage.LUMEN_SYS_CONFIG__TENANT_ENV:
+				setTenantEnv((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -928,6 +1021,9 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case LumenPackage.LUMEN_SYS_CONFIG__MONGO_URI:
+				setMongoUri(MONGO_URI_EDEFAULT);
+				return;
 			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_APP_ID:
 				setFacebookAppId(FACEBOOK_APP_ID_EDEFAULT);
 				return;
@@ -982,6 +1078,9 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 			case LumenPackage.LUMEN_SYS_CONFIG__TWITTER_TENANT_ACCESS_TOKEN_SECRET:
 				setTwitterTenantAccessTokenSecret(TWITTER_TENANT_ACCESS_TOKEN_SECRET_EDEFAULT);
 				return;
+			case LumenPackage.LUMEN_SYS_CONFIG__TENANT_ENV:
+				setTenantEnv(TENANT_ENV_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -994,6 +1093,8 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case LumenPackage.LUMEN_SYS_CONFIG__MONGO_URI:
+				return MONGO_URI_EDEFAULT == null ? mongoUri != null : !MONGO_URI_EDEFAULT.equals(mongoUri);
 			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_APP_ID:
 				return FACEBOOK_APP_ID_EDEFAULT == null ? facebookAppId != null : !FACEBOOK_APP_ID_EDEFAULT.equals(facebookAppId);
 			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_APP_SECRET:
@@ -1030,6 +1131,8 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 				return TWITTER_TENANT_ACCESS_TOKEN_EDEFAULT == null ? twitterTenantAccessToken != null : !TWITTER_TENANT_ACCESS_TOKEN_EDEFAULT.equals(twitterTenantAccessToken);
 			case LumenPackage.LUMEN_SYS_CONFIG__TWITTER_TENANT_ACCESS_TOKEN_SECRET:
 				return TWITTER_TENANT_ACCESS_TOKEN_SECRET_EDEFAULT == null ? twitterTenantAccessTokenSecret != null : !TWITTER_TENANT_ACCESS_TOKEN_SECRET_EDEFAULT.equals(twitterTenantAccessTokenSecret);
+			case LumenPackage.LUMEN_SYS_CONFIG__TENANT_ENV:
+				return TENANT_ENV_EDEFAULT == null ? tenantEnv != null : !TENANT_ENV_EDEFAULT.equals(tenantEnv);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -1041,6 +1144,27 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == MongoSysConfig.class) {
+			switch (derivedFeatureID) {
+				case LumenPackage.LUMEN_SYS_CONFIG__MONGO_URI: return CommonsPackage.MONGO_SYS_CONFIG__MONGO_URI;
+				default: return -1;
+			}
+		}
+		if (baseClass == FacebookSysConfig.class) {
+			switch (derivedFeatureID) {
+				case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_APP_ID: return SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_APP_ID;
+				case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_APP_SECRET: return SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_APP_SECRET;
+				case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_TENANT_ACCESS_TOKEN: return SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_ACCESS_TOKEN;
+				case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PROFILE_ID: return SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_PROFILE_ID;
+				case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PROFILE_USERNAME: return SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_PROFILE_USERNAME;
+				case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PROFILE_NAME: return SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_PROFILE_NAME;
+				case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PAGE_ID: return SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_PAGE_ID;
+				case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PAGE_USERNAME: return SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_PAGE_USERNAME;
+				case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PUBLISH_ENABLED: return SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_PUBLISH_ENABLED;
+				case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED: return SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED;
+				default: return -1;
+			}
+		}
 		if (baseClass == InstagramSysConfig.class) {
 			switch (derivedFeatureID) {
 				case LumenPackage.LUMEN_SYS_CONFIG__INSTAGRAM_SCREEN_NAME: return SocmedPackage.INSTAGRAM_SYS_CONFIG__INSTAGRAM_SCREEN_NAME;
@@ -1079,6 +1203,27 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == MongoSysConfig.class) {
+			switch (baseFeatureID) {
+				case CommonsPackage.MONGO_SYS_CONFIG__MONGO_URI: return LumenPackage.LUMEN_SYS_CONFIG__MONGO_URI;
+				default: return -1;
+			}
+		}
+		if (baseClass == FacebookSysConfig.class) {
+			switch (baseFeatureID) {
+				case SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_APP_ID: return LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_APP_ID;
+				case SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_APP_SECRET: return LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_APP_SECRET;
+				case SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_ACCESS_TOKEN: return LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_TENANT_ACCESS_TOKEN;
+				case SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_PROFILE_ID: return LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PROFILE_ID;
+				case SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_PROFILE_USERNAME: return LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PROFILE_USERNAME;
+				case SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_PROFILE_NAME: return LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PROFILE_NAME;
+				case SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_PAGE_ID: return LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PAGE_ID;
+				case SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_PAGE_USERNAME: return LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PAGE_USERNAME;
+				case SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_PUBLISH_ENABLED: return LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PUBLISH_ENABLED;
+				case SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED: return LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED;
+				default: return -1;
+			}
+		}
 		if (baseClass == InstagramSysConfig.class) {
 			switch (baseFeatureID) {
 				case SocmedPackage.INSTAGRAM_SYS_CONFIG__INSTAGRAM_SCREEN_NAME: return LumenPackage.LUMEN_SYS_CONFIG__INSTAGRAM_SCREEN_NAME;
@@ -1120,7 +1265,9 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (facebookAppId: ");
+		result.append(" (mongoUri: ");
+		result.append(mongoUri);
+		result.append(", facebookAppId: ");
 		result.append(facebookAppId);
 		result.append(", facebookAppSecret: ");
 		result.append(facebookAppSecret);
@@ -1156,6 +1303,8 @@ public class LumenSysConfigImpl extends MinimalEObjectImpl.Container implements 
 		result.append(twitterTenantAccessToken);
 		result.append(", twitterTenantAccessTokenSecret: ");
 		result.append(twitterTenantAccessTokenSecret);
+		result.append(", tenantEnv: ");
+		result.append(tenantEnv);
 		result.append(')');
 		return result.toString();
 	}

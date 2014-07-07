@@ -1,12 +1,26 @@
-package id.ac.itb.ee.lskk.lumen.yago;
+package id.ac.itb.ee.lskk.lumen.core.yago;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.gridgain.grid.Grid;
+import org.gridgain.grid.cache.GridCache;
+
+import com.google.common.collect.ListMultimap;
+
 public class YagoLabel {
 	
+	public static GridCache<String, YagoLabel> cache(Grid grid) {
+		return grid.cache("yagoLabel");
+	}
+
+	public static GridCache<String, ListMultimap<String, String>> entityByLabelCache(
+			Grid grid) {
+		return grid.cache("yagoEntityByLabel");
+	}
+
 	@Nullable
 	private String prefLabel;
 	@Nullable
@@ -83,6 +97,20 @@ public class YagoLabel {
 	
 	public void setFamilyName(String familyName) {
 		this.familyName = familyName;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "YagoLabel ["
+				+ (prefLabel != null ? "prefLabel=" + prefLabel + ", " : "")
+				+ (labels != null ? "labels=" + labels + ", " : "")
+				+ (preferredMeaningLabels != null ? "preferredMeaningLabels="
+						+ preferredMeaningLabels + ", " : "")
+				+ (givenName != null ? "givenName=" + givenName + ", " : "")
+				+ (familyName != null ? "familyName=" + familyName : "") + "]";
 	}
 
 }

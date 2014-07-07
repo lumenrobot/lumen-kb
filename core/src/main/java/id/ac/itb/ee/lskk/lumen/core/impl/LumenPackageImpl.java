@@ -6,11 +6,13 @@ import id.ac.itb.ee.lskk.lumen.core.LumenFactory;
 import id.ac.itb.ee.lskk.lumen.core.LumenPackage;
 import id.ac.itb.ee.lskk.lumen.core.LumenSysConfig;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
+import org.soluvas.commons.CommonsPackage;
 import org.soluvas.socmed.SocmedPackage;
 
 /**
@@ -74,6 +76,7 @@ public class LumenPackageImpl extends EPackageImpl implements LumenPackage {
 		isInited = true;
 
 		// Initialize simple dependencies
+		CommonsPackage.eINSTANCE.eClass();
 		SocmedPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
@@ -105,6 +108,15 @@ public class LumenPackageImpl extends EPackageImpl implements LumenPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getLumenSysConfig_TenantEnv() {
+		return (EAttribute)lumenSysConfigEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public LumenFactory getLumenFactory() {
 		return (LumenFactory)getEFactoryInstance();
 	}
@@ -129,6 +141,7 @@ public class LumenPackageImpl extends EPackageImpl implements LumenPackage {
 
 		// Create classes and their features
 		lumenSysConfigEClass = createEClass(LUMEN_SYS_CONFIG);
+		createEAttribute(lumenSysConfigEClass, LUMEN_SYS_CONFIG__TENANT_ENV);
 	}
 
 	/**
@@ -155,6 +168,7 @@ public class LumenPackageImpl extends EPackageImpl implements LumenPackage {
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
+		CommonsPackage theCommonsPackage = (CommonsPackage)EPackage.Registry.INSTANCE.getEPackage(CommonsPackage.eNS_URI);
 		SocmedPackage theSocmedPackage = (SocmedPackage)EPackage.Registry.INSTANCE.getEPackage(SocmedPackage.eNS_URI);
 
 		// Create type parameters
@@ -162,6 +176,8 @@ public class LumenPackageImpl extends EPackageImpl implements LumenPackage {
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		lumenSysConfigEClass.getESuperTypes().add(theCommonsPackage.getGeneralSysConfig());
+		lumenSysConfigEClass.getESuperTypes().add(theCommonsPackage.getMongoSysConfig());
 		lumenSysConfigEClass.getESuperTypes().add(theSocmedPackage.getFacebookSysConfig());
 		lumenSysConfigEClass.getESuperTypes().add(theSocmedPackage.getInstagramSysConfig());
 		lumenSysConfigEClass.getESuperTypes().add(theSocmedPackage.getYouTubeSysConfig());
@@ -170,6 +186,7 @@ public class LumenPackageImpl extends EPackageImpl implements LumenPackage {
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(lumenSysConfigEClass, LumenSysConfig.class, "LumenSysConfig", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getLumenSysConfig_TenantEnv(), ecorePackage.getEString(), "tenantEnv", null, 0, 1, LumenSysConfig.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

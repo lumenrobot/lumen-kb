@@ -23,6 +23,24 @@
 			<artifactId>org.soluvas.socmed</artifactId>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.spullara.mustache.java</groupId>
+			<artifactId>compiler</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.gridgain</groupId>
+			<artifactId>gridgain-indexing</artifactId>
+			<version>6.1.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.gridgain</groupId>
+			<artifactId>gridgain-spring</artifactId>
+			<version>6.1.9</version>
+		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework</groupId>

@@ -1,5 +1,9 @@
 package id.ac.itb.ee.lskk.lumen.yago;
 
+import id.ac.itb.ee.lskk.lumen.core.yago.Fact;
+import id.ac.itb.ee.lskk.lumen.core.yago.LiteralFact;
+import id.ac.itb.ee.lskk.lumen.core.yago.Rule;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;

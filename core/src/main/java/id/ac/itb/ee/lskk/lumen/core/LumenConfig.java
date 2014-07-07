@@ -4,6 +4,7 @@ import id.ac.itb.ee.lskk.lumen.core.yago.YagoAnswerer;
 import id.ac.itb.ee.lskk.lumen.core.yago.YagoEntityByLabelCacheStore;
 import id.ac.itb.ee.lskk.relexid.core.RelExConfig;
 
+import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.Locale;
 
@@ -15,6 +16,7 @@ import org.gridgain.grid.GridException;
 import org.gridgain.grid.GridGainSpring;
 import org.soluvas.commons.OnDemandXmiLoader;
 import org.soluvas.commons.config.CommonsWebConfig;
+import org.soluvas.mongo.MongoUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +24,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 
 import com.mongodb.DB;
-import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.ReadPreference;
 
 /**
  *
@@ -64,16 +66,9 @@ public class LumenConfig {
 		
 	}
 	
-	@Bean(destroyMethod="close")
-	public MongoClient mongo() throws UnknownHostException {
-		MongoClient mongo = new MongoClient(new MongoClientURI(sysConfig().getMongoUri()));
-		return mongo;
-	}
-	
 	@Bean
-	public DB mongoDb() throws UnknownHostException {
-		DB db = mongo().getDB("lumen_lumen_" + sysConfig().getTenantEnv());
-		return db;
+	public DB mongoDb() throws UnknownHostException, UnsupportedEncodingException {
+		return MongoUtils.getDb(new MongoClientURI(sysConfig().getMongoUri()), ReadPreference.primary());
 	}
 	
 	@Bean

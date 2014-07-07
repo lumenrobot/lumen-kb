@@ -22,7 +22,11 @@
 			<groupId>org.soluvas</groupId>
 			<artifactId>org.soluvas.socmed</artifactId>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.soluvas</groupId>
+			<artifactId>org.soluvas.mongo</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
@@ -44,6 +48,12 @@
 			<groupId>org.gridgain</groupId>
 			<artifactId>gridgain-spring</artifactId>
 			<version>6.1.9</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<dependency>

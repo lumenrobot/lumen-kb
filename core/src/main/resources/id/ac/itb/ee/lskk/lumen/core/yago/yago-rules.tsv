@@ -22,7 +22,7 @@
 "wasBornOnDate"	"When was (?<subject>.+) born[,.?!]*"	"(Kapan|Kpn|Tanggal berapa|Tgl brp|Tanggal brp|Tgl berapa|Tgl brpa|Tanggal brpa) (?<subject>.+) (dilahirkan|lahir)[,.?!]*"	"{{subject}} was born on {{object}}."	"{{subject}} lahir pada {{object}}."
 "hasNumberOfPeople"	"How many people live in (?<subject>.+)[,.?!]*"	"(Berapa|Brpa|Brp) (populasi|penduduk|jumlah penduduk|jml penduduk|warga|rakyat|orang ada di|org ada di|jumlah orang|jumlah org|jml org|jml orang) (?<subject>.+)[,.?!]*"	"{{subject}}'s population is {{object}} people."	"Populasi {{subject}} adalah {{object}} orang."
 "diedIn"	"Where did (?<subject>.+) die[,.?!]*"	"(Di mana|Dimana|Dmna|Dmn|Di mn|Dimn) (?<subject>.+) (meninggal dunia|meninggal|mati|wafat|tewas)[,.?!]*"	"{{subject}} died in {{object}}."	"{{subject}} meninggal dunia di {{object}}."
-"hasHeight"	"How tall is (?<subject>.+)[,.?!]*"	"(Berapa|Brpa|Brp) (tinggi|tggi) (?<subject>.+)[,.?!]*"	"{{subject}}'s height {{object}}."	"Tinggi {{subject}} adalah {{object}}."
+"hasHeight"	"How tall is (?<subject>.+)[,.?!]*"	"(Berapa|Brpa|Brp) (tinggi|tggi) (?<subject>.+)[,.?!]*"	"{{subject}}'s height is {{object}}."	"Tinggi {{subject}} adalah {{object}}."
 "hasMotto"	"What is (?<subject>.+)'s motto[,.?!]*"	"(Apa|Ap|Apakah|Apa kah) (motto|moto) (?<subject>.+)[,.?!]*"	"{{subject}}'s motto is {{object}}."	"Motto {{subject}} adalah {{object}}."
 "hasWeight"	"How much does (?<subject>.+) weight[,.?!]*"	"(Berapa|Brpa|Brp) berat (?<subject>.+)[,.?!]*"	"{{subject}} weights {{object}}."	"Berat {{subject}} adalah {{object}}."
 "directed"	"What movies did (?<subject>.+) direct[,.?!]*"	"(?<subject>.+) menyutradarai film apa[,.?!]*"	"{{subject}} directed {{object}}."	"{{subject}} menyutradarai {{object}}."

@@ -199,10 +199,8 @@ public class FacebookChannel {
 					.replaceAll("^[,.:?! ]+", "").replaceAll("[,.:?! ]+$", "").trim();
 			String reply;
 			try {
-				Answer answer_en = yagoAnswerer.answer(LumenConfig.ENGLISH, curatedMessage);
-				Answer answer_id = yagoAnswerer.answer(LumenConfig.INDONESIAN, curatedMessage);
-				reply = answer_en + "\n" +
-						answer_id;
+				Answer answer = yagoAnswerer.answer(curatedMessage);
+				reply = answer.toString();
 			} catch (Exception e) {
 				log.error(String.format("Cannot parse %s %s's status: %s", 
 						perception.fromId, perception.fromName, curatedMessage), e);

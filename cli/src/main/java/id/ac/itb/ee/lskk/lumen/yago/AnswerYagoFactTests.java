@@ -74,10 +74,8 @@ public class AnswerYagoFactTests {
 			log.info("wasBornIn is {}", ruleCache.get("wasBornIn"));
 			
 			YagoAnswerer answerer = appCtx.getBean(YagoAnswerer.class);
-			Answer answer_en = answerer.answer(LumenConfig.ENGLISH, msg);
-			Answer answer_id = answerer.answer(LumenConfig.INDONESIAN, msg);
-			log.info("English: {}", answer_en);
-			log.info("Indonesian: {}", answer_id);
+			Answer answer = answerer.answer(msg);
+			log.info("{}", answer);
 			
 			grid.compute().broadcast((GridRunnable) () -> {
 				try {

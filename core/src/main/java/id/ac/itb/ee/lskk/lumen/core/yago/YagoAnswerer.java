@@ -5,7 +5,6 @@ import id.ac.itb.ee.lskk.lumen.core.LumenException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,21 +70,34 @@ public class YagoAnswerer {
 	
 	public static class Answer {
 		private final AnswerKind kind;
-		private String text;
-		private String html;
+		private String text_en;
+		private String html_en;
+		private String text_id;
+		private String html_id;
 		
-		public Answer(AnswerKind kind, @Nullable String text, @Nullable String html) {
+		public Answer(AnswerKind kind, @Nullable String text_en, @Nullable String html_en, 
+				@Nullable String text_id, @Nullable String html_id) {
 			super();
 			this.kind = kind;
-			if (html == null && text != null) {
-				this.text = text;
-				this.html = HtmlEscapers.htmlEscaper().escape(text);
-			} else if (text == null && html != null) {
-				this.text = Jsoup.parseBodyFragment(html).text();
-				this.html = html;
+			if (html_en == null && text_en != null) {
+				this.text_en = text_en;
+				this.html_en = HtmlEscapers.htmlEscaper().escape(text_en);
+			} else if (text_en == null && html_en != null) {
+				this.text_en = Jsoup.parseBodyFragment(html_en).text();
+				this.html_en = html_en;
 			} else {
-				this.text = text;
-				this.html = html;
+				this.text_en = text_en;
+				this.html_en = html_en;
+			}
+			if (html_id == null && text_id != null) {
+				this.text_id = text_id;
+				this.html_id = HtmlEscapers.htmlEscaper().escape(text_id);
+			} else if (text_id == null && html_id != null) {
+				this.text_id = Jsoup.parseBodyFragment(html_id).text();
+				this.html_id = html_id;
+			} else {
+				this.text_id = text_id;
+				this.html_id = html_id;
 			}
 		}
 		
@@ -95,24 +107,38 @@ public class YagoAnswerer {
 		public AnswerKind getKind() {
 			return kind;
 		}
-
+		
 		/**
-		 * @return the html
+		 * @return the text_en
 		 */
-		public String getHtml() {
-			return html;
+		public String getText_en() {
+			return text_en;
 		}
 
 		/**
-		 * @return the text
+		 * @return the html_en
 		 */
-		public String getText() {
-			return text;
+		public String getHtml_en() {
+			return html_en;
+		}
+
+		/**
+		 * @return the text_id
+		 */
+		public String getText_id() {
+			return text_id;
+		}
+
+		/**
+		 * @return the html_id
+		 */
+		public String getHtml_id() {
+			return html_id;
 		}
 
 		@Override
 		public String toString() {
-			return kind == AnswerKind.OK ? text : kind + ": " + text;
+			return kind == AnswerKind.OK ? text_en + "\n" + text_id : kind + ": " + text_en;
 		}
 		
 	}
@@ -124,7 +150,7 @@ public class YagoAnswerer {
 	@Inject
 	private YagoEntityByLabelCacheStore entityByLabelCacheStore;
 	
-	public Answer answer(Locale locale, String inputMsg) {
+	public Answer answer(String inputMsg) {
 		try {
 			GridCache<String, YagoRule> ruleCache = YagoRule.cache(grid);
 			
@@ -250,18 +276,11 @@ public class YagoAnswerer {
 						final Object literalObj = literalFactObj.get("l");
 						final String unit = (String) literalFactObj.get("u");
 //					LiteralFact literalFact = new LiteralFact(resId, foundMatcher.getSubject(), foundMatcher.getRule().property, literalObj, unit);
-						switch (locale.getLanguage()) {
-						case "en":
-							String answer_en = LiteralFact.formatLiteralFact_en(foundMatcher.getRule().getAnswerTemplateHtml_en(), foundMatcher.getSubject(), literalObj, unit);  
-							log.info("English: {}", answer_en);
-							return new Answer(AnswerKind.OK, null, answer_en.toString());
-						case "in":
-							String answer_id = LiteralFact.formatLiteralFact_id(foundMatcher.getRule().getAnswerTemplateHtml_id(), foundMatcher.getSubject(), literalObj, unit);
-							log.info("Indonesian: {}", answer_id);
-							return new Answer(AnswerKind.OK, null, answer_id.toString());
-						default:
-							throw new IllegalArgumentException("Unsupported language: " + locale.getLanguage());
-						}
+						String answer_en = LiteralFact.formatLiteralFact_en(foundMatcher.getRule().getAnswerTemplateHtml_en(), foundMatcher.getSubject(), literalObj, unit);  
+						log.info("English: {}", answer_en);
+						String answer_id = LiteralFact.formatLiteralFact_id(foundMatcher.getRule().getAnswerTemplateHtml_id(), foundMatcher.getSubject(), literalObj, unit);
+						log.info("Indonesian: {}", answer_id);
+						return new Answer(AnswerKind.OK, null, answer_en.toString(), null, answer_id.toString());
 					} else {
 						DBObject factObj = factColl.findOne(new BasicDBObject( ImmutableMap.of("s", resId, "p", foundMatcher.getRule().getProperty()) ),
 								new BasicDBObject( ImmutableMap.of("_id", false, "o", true)), ReadPreference.secondaryPreferred());
@@ -280,40 +299,37 @@ public class YagoAnswerer {
 							} else {
 								objectText = factId;
 							}
-							switch (locale.getLanguage()) {
-							case "en":
-								final StringWriter sw_en = new StringWriter();
-								MF.compile(new StringReader(foundMatcher.getRule().getAnswerTemplateHtml_en()), "en").run(sw_en, 
-										new Object[] { ImmutableMap.of("subject", foundMatcher.getSubject(), "object", objectText) });
-								log.info("English: {}", sw_en);
-								return new Answer(AnswerKind.OK, null, sw_en.toString());
-							case "in":
-								final StringWriter sw_id = new StringWriter();
-								MF.compile(new StringReader(foundMatcher.getRule().getAnswerTemplateHtml_id()), "id").run(sw_id, 
-										new Object[] { ImmutableMap.of("subject", foundMatcher.getSubject(), "object", objectText) });
-								log.info("Indonesian: {}", sw_id);
-								return new Answer(AnswerKind.OK, null, sw_id.toString());
-							default:
-								throw new IllegalArgumentException("Unsupported language: " + locale.getLanguage());
-							}
+							
+							final StringWriter sw_en = new StringWriter();
+							MF.compile(new StringReader(foundMatcher.getRule().getAnswerTemplateHtml_en()), "en").run(sw_en, 
+									new Object[] { ImmutableMap.of("subject", foundMatcher.getSubject(), "object", objectText) });
+							log.info("English: {}", sw_en);
+							
+							final StringWriter sw_id = new StringWriter();
+							MF.compile(new StringReader(foundMatcher.getRule().getAnswerTemplateHtml_id()), "id").run(sw_id, 
+									new Object[] { ImmutableMap.of("subject", foundMatcher.getSubject(), "object", objectText) });
+							log.info("Indonesian: {}", sw_id);
+							
+							return new Answer(AnswerKind.OK, null, sw_en.toString(), null, sw_id.toString());
 						} else {
-							final Answer answer = new Answer(AnswerKind.MISSING_FACT, 
-									String.format("Matched rule, tried finding '%s' for '%s' (%s) but no fact found.",
-											foundMatcher.rule.getProperty(), resId, foundMatcher.getSubject()), null);
+							final String missingMsg = String.format("Matched rule, tried finding '%s' for '%s' (%s) but no fact found.",
+									foundMatcher.rule.getProperty(), resId, foundMatcher.getSubject());
+							final Answer answer = new Answer(AnswerKind.MISSING_FACT, missingMsg, null, missingMsg, null);
 							log.info("{}", answer);
 							return answer;
 						}
 					}
 					
 				} else {
-					final Answer answer = new Answer(AnswerKind.MISSING_ENTITY, 
-							String.format("Matched rule %s but no matching entity for label '%s'", foundMatcher.rule.getProperty(), foundMatcher.getSubject()), null);
+					final String missingMsg = String.format("Matched rule %s but no matching entity for label '%s'", foundMatcher.rule.getProperty(), foundMatcher.getSubject());
+					final Answer answer = new Answer(AnswerKind.MISSING_ENTITY, missingMsg, null, missingMsg, null);
 					log.info("{}", answer);
 					return answer;
 				}
 			} else {
-				final Answer answer = new Answer(AnswerKind.RULE_MISMATCH, 
-						String.format("No match from %s question rules: %s", ruleIds.size(), ruleIds.stream().collect(Collectors.joining(", "))), null);
+				final String mismatchMsg = String.format("No match for '%s' from %s question rules: %s",
+						inputMsg, ruleIds.size(), ruleIds.stream().collect(Collectors.joining(", ")));
+				final Answer answer = new Answer(AnswerKind.RULE_MISMATCH, mismatchMsg, null, mismatchMsg, null);
 				log.info("{}", answer);
 				return answer;
 			}

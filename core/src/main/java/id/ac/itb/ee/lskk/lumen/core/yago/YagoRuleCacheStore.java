@@ -1,49 +1,47 @@
 package id.ac.itb.ee.lskk.lumen.core.yago;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 import org.gridgain.grid.GridException;
 import org.gridgain.grid.cache.store.GridCacheLoadOnlyStoreAdapter;
 import org.gridgain.grid.lang.GridBiTuple;
+import org.odftoolkit.simple.SpreadsheetDocument;
+import org.odftoolkit.simple.table.Row;
+import org.odftoolkit.simple.table.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
 
 /**
  * @author ceefour
  *
  */
 public class YagoRuleCacheStore extends
-		GridCacheLoadOnlyStoreAdapter<String, YagoRule, String[]> {
+		GridCacheLoadOnlyStoreAdapter<String, YagoRule, Row> {
 			
 	private static final Logger log = LoggerFactory
 			.getLogger(YagoRuleCacheStore.class);
 
 	@Override
-	protected Iterator<String[]> inputIterator(Object... args)
+	protected Iterator<Row> inputIterator(Object... args)
 			throws GridException {
-		URL yagoRulesTsv = YagoRuleCacheStore.class.getResource("yago-rules.tsv");
-		log.info("Loading '{}'...", yagoRulesTsv);
-		// LibreOffice doesn't use \ as escape character
-		try (CSVReader reader = new CSVReader(
-				new InputStreamReader(yagoRulesTsv.openStream(), StandardCharsets.UTF_8),
-					'\t', CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.NO_ESCAPE_CHARACTER)) {
-			reader.readNext(); // skip heading
-			return reader.readAll().iterator();
-		} catch (IOException e) {
-			throw new GridException("Cannot read " + yagoRulesTsv, e);
+		URL yagoRulesOds = YagoRuleCacheStore.class.getResource("yago-rules.ods");
+		log.info("Loading '{}'...", yagoRulesOds);
+		try (SpreadsheetDocument doc = SpreadsheetDocument.loadDocument(yagoRulesOds.openStream())) {
+			Table table = doc.getTableList().get(0);
+			log.info("Got {} rows in table {}", table.getRowCount(), table.getTableName());
+			return table.getRowList().stream().skip(1).collect(Collectors.toList()).iterator();
+		} catch (Exception e) {
+			throw new GridException("Cannot read " + yagoRulesOds, e);
 		}
 	}
 
 	@Override
-	protected GridBiTuple<String, YagoRule> parse(String[] row, Object... args) {
-		final YagoRule rule = new YagoRule(row[0], row[1], row[2], row[3], row[4]);
+	protected GridBiTuple<String, YagoRule> parse(Row row, Object... args) {
+		final YagoRule rule = new YagoRule(row.getCellByIndex(0).getStringValue(), 
+				row.getCellByIndex(1).getStringValue(), row.getCellByIndex(2).getStringValue(), 
+				row.getCellByIndex(3).getStringValue(), row.getCellByIndex(4).getStringValue());
 		log.debug("Added rule {}", rule);
 		return new GridBiTuple<>(rule.property, rule);
 	}

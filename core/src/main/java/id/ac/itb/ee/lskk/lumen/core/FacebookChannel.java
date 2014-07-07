@@ -1,5 +1,6 @@
 package id.ac.itb.ee.lskk.lumen.core;
 
+import id.ac.itb.ee.lskk.lumen.core.yago.YagoAnswerer;
 import id.ac.itb.ee.lskk.relexid.core.RelEx;
 import id.ac.itb.ee.lskk.relexid.core.Relation;
 import id.ac.itb.ee.lskk.relexid.core.Sentence;
@@ -7,6 +8,7 @@ import id.ac.itb.ee.lskk.relexid.core.Sentence;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -128,6 +130,8 @@ public class FacebookChannel {
 	private LumenSysConfig sysConfig;
 	@Inject
 	private RelEx relex;
+	@Inject
+	private YagoAnswerer yagoAnswerer;
 	
 	private DefaultFacebookClient fb;
 	
@@ -188,7 +192,31 @@ public class FacebookChannel {
 		return perceptions;
 	}
 	
-	public List<FacebookAction> perceive(List<FacebookPerception> perceptions) {
+	public List<FacebookAction> perceiveQA(List<FacebookPerception> perceptions) {
+		List<FacebookAction> actions = new ArrayList<FacebookAction>();
+		for (FacebookPerception perception : perceptions) {
+			final String curatedMessage = perception.message.replaceAll("Arkan Lumen", "").trim()
+					.replaceAll("^[,.:?! ]+", "").replaceAll("[,.:?! ]+$", "").trim();
+			String reply;
+			try {
+				Optional<String> answer_en = yagoAnswerer.answer(LumenConfig.ENGLISH, curatedMessage);
+				Optional<String> answer_id = yagoAnswerer.answer(LumenConfig.INDONESIAN, curatedMessage);
+				reply = answer_en.orElse("???") + "\n" +
+						answer_id.orElse("???");
+			} catch (Exception e) {
+				log.error(String.format("Cannot parse %s %s's status: %s", 
+						perception.fromId, perception.fromName, curatedMessage), e);
+				reply = ExceptionUtils.getStackTrace(e);
+			}
+			actions.add(new FacebookAction(perception.post, perception.replyTo, reply, perception.fromId, perception.fromName));
+		}
+		if (!actions.isEmpty()) {
+			log.info("{} actions: {}", actions.size(), actions);
+		}
+		return actions;
+	}
+
+	public List<FacebookAction> perceiveRelex(List<FacebookPerception> perceptions) {
 		List<FacebookAction> actions = new ArrayList<FacebookAction>();
 		for (FacebookPerception perception : perceptions) {
 			String reply;

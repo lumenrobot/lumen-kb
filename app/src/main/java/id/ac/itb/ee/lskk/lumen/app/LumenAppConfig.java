@@ -1,10 +1,10 @@
 package id.ac.itb.ee.lskk.lumen.app;
 
 import id.ac.itb.ee.lskk.lumen.core.FacebookChannel;
-import id.ac.itb.ee.lskk.lumen.core.LumenConfig;
 import id.ac.itb.ee.lskk.lumen.core.FacebookChannel.FacebookAction;
 import id.ac.itb.ee.lskk.lumen.core.FacebookChannel.FacebookActionResult;
 import id.ac.itb.ee.lskk.lumen.core.FacebookChannel.FacebookPerception;
+import id.ac.itb.ee.lskk.lumen.core.LumenConfig;
 
 import java.util.List;
 
@@ -41,7 +41,8 @@ public class LumenAppConfig {
 			log.info("{} perceptions: {}", perceptions.size(), perceptions);
 		}
 			
-		List<FacebookAction> actions = facebookChannel.perceive(perceptions);
+//		List<FacebookAction> actions = facebookChannel.perceiveRelex(perceptions);
+		List<FacebookAction> actions = facebookChannel.perceiveQA(perceptions);
 		if (!actions.isEmpty()) {
 			log.info("{} actions: {}", actions.size(), actions);
 		}

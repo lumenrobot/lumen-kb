@@ -1,9 +1,11 @@
 package id.ac.itb.ee.lskk.lumen.core;
 
+import id.ac.itb.ee.lskk.lumen.core.yago.YagoAnswerer;
 import id.ac.itb.ee.lskk.lumen.core.yago.YagoEntityByLabelCacheStore;
 import id.ac.itb.ee.lskk.relexid.core.RelExConfig;
 
 import java.net.UnknownHostException;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -30,7 +32,10 @@ import com.mongodb.MongoClientURI;
 @Configuration
 @Import({CommonsWebConfig.class, RelExConfig.class})
 public class LumenConfig {
-	
+
+	public static final Locale ENGLISH = Locale.forLanguageTag("en-US");
+	public static final Locale INDONESIAN = Locale.forLanguageTag("id-ID");
+
 	@Bean
 	public LumenSysConfig sysConfig() {
 		return new OnDemandXmiLoader<LumenSysConfig>(
@@ -73,6 +78,11 @@ public class LumenConfig {
 	@Bean
 	public YagoEntityByLabelCacheStore yagoEntityByLabelCacheStore() {
 		return new YagoEntityByLabelCacheStore();
+	}
+	
+	@Bean
+	public YagoAnswerer yagoAnswerer() {
+		return new YagoAnswerer();
 	}
 	
 }

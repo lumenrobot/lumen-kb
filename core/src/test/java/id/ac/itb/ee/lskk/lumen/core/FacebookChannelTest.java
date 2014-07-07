@@ -47,7 +47,7 @@ public class FacebookChannelTest {
 	public void perceive() {
 		ImmutableList<FacebookPerception> perceptions = ImmutableList.of( 
 				new FacebookPerception(null, 10152513803701672l, "Hendy Irawan", "aku ingin unta kuning", "1428312064109783_1428380687436254"));
-		List<FacebookAction> actions = facebookChannel.perceive(perceptions);
+		List<FacebookAction> actions = facebookChannel.perceiveRelex(perceptions);
 		log.info("{} actions: {}", actions.size(), actions);
 	}
 
@@ -72,7 +72,7 @@ public class FacebookChannelTest {
 		List<FacebookPerception> perceptions = facebookChannel.poll();
 		log.info("{} perceptions: {}", perceptions.size(), perceptions);
 		
-		List<FacebookAction> actions = facebookChannel.perceive(perceptions);
+		List<FacebookAction> actions = facebookChannel.perceiveRelex(perceptions);
 		log.info("{} actions: {}", actions.size(), actions);
 
 		List<FacebookActionResult> results = facebookChannel.respond(actions);

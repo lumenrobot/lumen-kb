@@ -52,7 +52,7 @@ public class LumenConfig {
 		private GridConfiguration gridCfg;
 		
 		@Bean(destroyMethod="close")
-		public Grid grid() throws GridException, UnknownHostException {
+		public Grid grid() throws GridException {
 			return GridGainSpring.start(gridCfg, appCtx);
 		}
 		

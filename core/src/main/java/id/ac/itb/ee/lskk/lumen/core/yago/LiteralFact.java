@@ -6,10 +6,13 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.Year;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
@@ -36,6 +39,8 @@ public class LiteralFact {
 	private static final NumberFormat ID_PCT = NumberFormat.getPercentInstance(INDONESIAN);
 	private static final MoneyFormatter MONEY_EN = new MoneyFormatterBuilder().appendCurrencySymbolLocalized().appendAmountLocalized().toFormatter(ENGLISH);
 	private static final MoneyFormatter MONEY_ID = new MoneyFormatterBuilder().appendCurrencySymbolLocalized().appendAmountLocalized().toFormatter(INDONESIAN);
+	private static final Pattern YEAR_MONTH = Pattern.compile("^([0-9]+-[0-9]+)");
+	private static final Pattern YEAR_ONLY = Pattern.compile("^([0-9]+)");
 	
 	final String subject;
 	private final String property;
@@ -103,13 +108,21 @@ public class LiteralFact {
 		} else if (literal instanceof Number) {
 			objectText_en = EN_NUM.format(literal) + " " + unit;
 		} else if ("xsd:date".equals(unit)) {
-			String dateStr_en = (String) literal;
+			final String literalText = (String) literal;
+			String dateStr_en = literalText;
 			try {
-				LocalDate localDate = LocalDate.parse((String) literal);
+				LocalDate localDate = LocalDate.parse(literalText, DateTimeFormatter.ofPattern("uuu-M-d"));
 				dateStr_en = localDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(ENGLISH));
 			} catch (Exception e) {
-				Year year = Year.parse(((String) literal).substring(0, 4));
-				dateStr_en = "year " + year.toString();
+				Matcher yearMonthMatcher = YEAR_MONTH.matcher(literalText);
+				Matcher yearMatcher = YEAR_ONLY.matcher(literalText);
+				if (yearMonthMatcher.matches()) {
+					YearMonth yearMonth = YearMonth.parse(yearMonthMatcher.group(1));
+					dateStr_en = yearMonth.format(DateTimeFormatter.ofPattern("LLL uuu", ENGLISH));
+				} else if (yearMatcher.matches()) {
+					Year year = Year.parse(yearMatcher.group(1));
+					dateStr_en = "year " + year.format(DateTimeFormatter.ofPattern("uuu", ENGLISH));
+				}
 			}
 			objectText_en = dateStr_en;
 		} else {
@@ -144,13 +157,21 @@ public class LiteralFact {
 		} else if (literal instanceof Number) {
 			objectText_id = ID_NUM.format(literal) + " " + unit;
 		} else if ("xsd:date".equals(unit)) {
-			String dateStr_id = (String) literal;
+			final String literalText = (String) literal;
+			String dateStr_id = literalText;
 			try {
-				LocalDate localDate = LocalDate.parse((String) literal);
+				LocalDate localDate = LocalDate.parse(literalText, DateTimeFormatter.ofPattern("uuu-M-d"));
 				dateStr_id = localDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(INDONESIAN));
 			} catch (Exception e) {
-				Year year = Year.parse(((String) literal).substring(0, 4));
-				dateStr_id = "tahun " + year.toString();
+				Matcher yearMonthMatcher = YEAR_MONTH.matcher(literalText);
+				Matcher yearMatcher = YEAR_ONLY.matcher(literalText);
+				if (yearMonthMatcher.matches()) {
+					YearMonth yearMonth = YearMonth.parse(yearMonthMatcher.group(1));
+					dateStr_id = yearMonth.format(DateTimeFormatter.ofPattern("LLL uuu", INDONESIAN));
+				} else if (yearMatcher.matches()) {
+					Year year = Year.parse(yearMatcher.group(1));
+					dateStr_id = "tahun " + year.format(DateTimeFormatter.ofPattern("uuu", INDONESIAN));
+				}
 			}
 			objectText_id = dateStr_id;
 		} else {

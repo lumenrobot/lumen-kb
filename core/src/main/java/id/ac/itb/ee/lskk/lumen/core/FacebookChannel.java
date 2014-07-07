@@ -1,6 +1,7 @@
 package id.ac.itb.ee.lskk.lumen.core;
 
 import id.ac.itb.ee.lskk.lumen.core.yago.YagoAnswerer;
+import id.ac.itb.ee.lskk.lumen.core.yago.YagoAnswerer.Answer;
 import id.ac.itb.ee.lskk.relexid.core.RelEx;
 import id.ac.itb.ee.lskk.relexid.core.Relation;
 import id.ac.itb.ee.lskk.relexid.core.Sentence;
@@ -8,7 +9,6 @@ import id.ac.itb.ee.lskk.relexid.core.Sentence;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -199,10 +199,10 @@ public class FacebookChannel {
 					.replaceAll("^[,.:?! ]+", "").replaceAll("[,.:?! ]+$", "").trim();
 			String reply;
 			try {
-				Optional<String> answer_en = yagoAnswerer.answer(LumenConfig.ENGLISH, curatedMessage);
-				Optional<String> answer_id = yagoAnswerer.answer(LumenConfig.INDONESIAN, curatedMessage);
-				reply = answer_en.orElse("???") + "\n" +
-						answer_id.orElse("???");
+				Answer answer_en = yagoAnswerer.answer(LumenConfig.ENGLISH, curatedMessage);
+				Answer answer_id = yagoAnswerer.answer(LumenConfig.INDONESIAN, curatedMessage);
+				reply = answer_en + "\n" +
+						answer_id;
 			} catch (Exception e) {
 				log.error(String.format("Cannot parse %s %s's status: %s", 
 						perception.fromId, perception.fromName, curatedMessage), e);

@@ -6,10 +6,10 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -23,6 +23,7 @@ import org.gridgain.grid.lang.GridCallable;
 import org.gridgain.grid.lang.GridClosure;
 import org.gridgain.grid.lang.GridReducer;
 import org.gridgain.grid.util.typedef.F;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +36,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder.ListMultimapBuilder;
+import com.google.common.html.HtmlEscapers;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -51,6 +53,70 @@ public class YagoAnswerer {
 			.getLogger(YagoAnswerer.class);
 	private static final MustacheFactory MF = new DefaultMustacheFactory();
 
+	public static enum AnswerKind {
+		OK,
+		/**
+		 * No question rule match.
+		 */
+		RULE_MISMATCH,
+		/**
+		 * No entity found for given label.
+		 */
+		MISSING_ENTITY,
+		/**
+		 * No fact found for given subject & property.
+		 */
+		MISSING_FACT
+	}
+	
+	public static class Answer {
+		private final AnswerKind kind;
+		private String text;
+		private String html;
+		
+		public Answer(AnswerKind kind, @Nullable String text, @Nullable String html) {
+			super();
+			this.kind = kind;
+			if (html == null && text != null) {
+				this.text = text;
+				this.html = HtmlEscapers.htmlEscaper().escape(text);
+			} else if (text == null && html != null) {
+				this.text = Jsoup.parseBodyFragment(html).text();
+				this.html = html;
+			} else {
+				this.text = text;
+				this.html = html;
+			}
+		}
+		
+		/**
+		 * @return the kind
+		 */
+		public AnswerKind getKind() {
+			return kind;
+		}
+
+		/**
+		 * @return the html
+		 */
+		public String getHtml() {
+			return html;
+		}
+
+		/**
+		 * @return the text
+		 */
+		public String getText() {
+			return text;
+		}
+
+		@Override
+		public String toString() {
+			return kind == AnswerKind.OK ? text : kind + ": " + text;
+		}
+		
+	}
+	
 	@Inject
 	private Grid grid;
 	@Inject
@@ -58,7 +124,7 @@ public class YagoAnswerer {
 	@Inject
 	private YagoEntityByLabelCacheStore entityByLabelCacheStore;
 	
-	public Optional<String> answer(Locale locale, String inputMsg) {
+	public Answer answer(Locale locale, String inputMsg) {
 		try {
 			GridCache<String, YagoRule> ruleCache = YagoRule.cache(grid);
 			
@@ -184,10 +250,18 @@ public class YagoAnswerer {
 						final Object literalObj = literalFactObj.get("l");
 						final String unit = (String) literalFactObj.get("u");
 //					LiteralFact literalFact = new LiteralFact(resId, foundMatcher.getSubject(), foundMatcher.getRule().property, literalObj, unit);
-						String answer_en = LiteralFact.formatLiteralFact_en(foundMatcher.getRule().getAnswerTemplateHtml_en(), foundMatcher.getSubject(), literalObj, unit);  
-						String answer_id = LiteralFact.formatLiteralFact_id(foundMatcher.getRule().getAnswerTemplateHtml_id(), foundMatcher.getSubject(), literalObj, unit);
-						log.info("English: {}", answer_en);
-						log.info("Indonesian: {}", answer_id);
+						switch (locale.getLanguage()) {
+						case "en":
+							String answer_en = LiteralFact.formatLiteralFact_en(foundMatcher.getRule().getAnswerTemplateHtml_en(), foundMatcher.getSubject(), literalObj, unit);  
+							log.info("English: {}", answer_en);
+							return new Answer(AnswerKind.OK, null, answer_en.toString());
+						case "in":
+							String answer_id = LiteralFact.formatLiteralFact_id(foundMatcher.getRule().getAnswerTemplateHtml_id(), foundMatcher.getSubject(), literalObj, unit);
+							log.info("Indonesian: {}", answer_id);
+							return new Answer(AnswerKind.OK, null, answer_id.toString());
+						default:
+							throw new IllegalArgumentException("Unsupported language: " + locale.getLanguage());
+						}
 					} else {
 						DBObject factObj = factColl.findOne(new BasicDBObject( ImmutableMap.of("s", resId, "p", foundMatcher.getRule().getProperty()) ),
 								new BasicDBObject( ImmutableMap.of("_id", false, "o", true)), ReadPreference.secondaryPreferred());
@@ -212,28 +286,37 @@ public class YagoAnswerer {
 								MF.compile(new StringReader(foundMatcher.getRule().getAnswerTemplateHtml_en()), "en").run(sw_en, 
 										new Object[] { ImmutableMap.of("subject", foundMatcher.getSubject(), "object", objectText) });
 								log.info("English: {}", sw_en);
-								return Optional.of(sw_en.toString());
+								return new Answer(AnswerKind.OK, null, sw_en.toString());
 							case "in":
 								final StringWriter sw_id = new StringWriter();
 								MF.compile(new StringReader(foundMatcher.getRule().getAnswerTemplateHtml_id()), "id").run(sw_id, 
 										new Object[] { ImmutableMap.of("subject", foundMatcher.getSubject(), "object", objectText) });
 								log.info("Indonesian: {}", sw_id);
-								return Optional.of(sw_id.toString());
+								return new Answer(AnswerKind.OK, null, sw_id.toString());
 							default:
 								throw new IllegalArgumentException("Unsupported language: " + locale.getLanguage());
 							}
 						} else {
-							log.info("I don't know");
+							final Answer answer = new Answer(AnswerKind.MISSING_FACT, 
+									String.format("Matched rule, tried finding '%s' for '%s' (%s) but no fact found.",
+											foundMatcher.rule.getProperty(), resId, foundMatcher.getSubject()), null);
+							log.info("{}", answer);
+							return answer;
 						}
 					}
 					
 				} else {
-					log.info("No resource for label '{}'.", foundMatcher.getSubject());
+					final Answer answer = new Answer(AnswerKind.MISSING_ENTITY, 
+							String.format("Matched rule %s but no matching entity for label '%s'", foundMatcher.rule.getProperty(), foundMatcher.getSubject()), null);
+					log.info("{}", answer);
+					return answer;
 				}
 			} else {
-				log.info("NOT FOUND!");
+				final Answer answer = new Answer(AnswerKind.RULE_MISMATCH, 
+						String.format("No match from %s question rules: %s", ruleIds.size(), ruleIds.stream().collect(Collectors.joining(", "))), null);
+				log.info("{}", answer);
+				return answer;
 			}
-			return Optional.empty();
 		} catch (IllegalArgumentException e) {
 			throw e;
 		} catch (IllegalStateException | GridException e) {

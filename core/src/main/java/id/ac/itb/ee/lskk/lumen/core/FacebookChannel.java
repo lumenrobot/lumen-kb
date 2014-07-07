@@ -167,9 +167,10 @@ public class FacebookChannel {
 					}).toList();
 					if (!myReplies.isEmpty()) {
 						log.debug("Post {} has my replies: {}", post.getId(), myReplies);
-						// check if last comment is from me?
+						// check if last comment is from other, mentions me, and hasn't been replied?
 						Comment lastComment = Iterables.getLast(post.getComments().getData());
 						if (sysConfig.getFacebookProfileId() != Long.valueOf(lastComment.getFrom().getId()) &&
+								StringUtils.containsIgnoreCase(lastComment.getMessage(), sysConfig.getFacebookProfileName()) &&
 								!StringUtils.equals(sysConfig.getFacebookProfileName(), lastComment.getFrom().getName())) {
 							log.debug("Comment {} from {} {} has not been replied: {}", 
 									lastComment.getId(), lastComment.getFrom().getId(), lastComment.getFrom().getName(), lastComment.getMessage());

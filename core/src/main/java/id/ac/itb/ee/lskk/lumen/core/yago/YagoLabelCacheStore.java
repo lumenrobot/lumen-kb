@@ -1,6 +1,4 @@
-package id.ac.itb.ee.lskk.lumen.yago;
-
-import id.ac.itb.ee.lskk.lumen.core.yago.YagoLabel;
+package id.ac.itb.ee.lskk.lumen.core.yago;
 
 import java.util.Collection;
 import java.util.HashSet;

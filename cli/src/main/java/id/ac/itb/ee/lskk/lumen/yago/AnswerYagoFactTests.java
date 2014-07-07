@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.google.common.collect.ListMultimap;
-import com.mongodb.DB;
 
 /**
  * Answer YAGO fact tests.
@@ -53,7 +52,6 @@ public class AnswerYagoFactTests {
 		
 		try (AnnotationConfigApplicationContext appCtx = new AnnotationConfigApplicationContext(LumenConfig.class)) {
 			Grid grid = appCtx.getBean(Grid.class);
-			DB db = appCtx.getBean(DB.class);
 			
 			GridCache<String, YagoRule> ruleCache = YagoRule.cache(grid);
 			GridCache<String, YagoLabel> labelCache = YagoLabel.cache(grid);

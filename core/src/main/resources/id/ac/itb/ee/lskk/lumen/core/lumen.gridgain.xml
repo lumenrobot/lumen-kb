@@ -86,7 +86,7 @@
 					<property name="distributionMode" value="PARTITIONED_ONLY" />
 					<property name="backups" value="1" />
 					<property name="store">
-						<bean class="id.ac.itb.ee.lskk.lumen.yago.YagoLabelCacheStore" autowire="byType" init-method="init" />
+						<bean class="id.ac.itb.ee.lskk.lumen.core.yago.YagoLabelCacheStore" autowire="byType" init-method="init" />
 					</property>
 					<property name="writeBehindEnabled" value="true" />
 					<property name="writeBehindFlushSize" value="102380" />

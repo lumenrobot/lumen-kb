@@ -47,7 +47,8 @@ public class LumenConfig {
 		return new FacebookChannel();
 	}
 	
-	@ImportResource("id/ac/itb/ee/lskk/lumen/core/lumen.gridgain.xml")
+	// "classpath:" is required, otherwise it won't be found in a WAR
+	@ImportResource("classpath:id/ac/itb/ee/lskk/lumen/core/lumen.gridgain.xml")
 	@Configuration
 	public static class GridGainConfig {
 		

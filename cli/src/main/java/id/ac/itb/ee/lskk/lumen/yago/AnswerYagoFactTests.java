@@ -204,8 +204,8 @@ public class AnswerYagoFactTests {
 						if (foundEntities == null) {
 							foundEntities = ListMultimapBuilder.hashKeys().arrayListValues().build();
 							foundEntities.put("_", null);
-							entityByLabelCache.put(foundMatcher.getSubject().toLowerCase(), foundEntities);
 						}
+						entityByLabelCache.putx(foundMatcher.getSubject().toLowerCase(), foundEntities);
 					}
 					tx.commit();
 				}

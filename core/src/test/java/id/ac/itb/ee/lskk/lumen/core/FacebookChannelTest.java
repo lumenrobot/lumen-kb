@@ -3,7 +3,6 @@ package id.ac.itb.ee.lskk.lumen.core;
 import id.ac.itb.ee.lskk.lumen.core.FacebookChannel.FacebookAction;
 import id.ac.itb.ee.lskk.lumen.core.FacebookChannel.FacebookActionResult;
 import id.ac.itb.ee.lskk.lumen.core.FacebookChannel.FacebookPerception;
-import id.ac.itb.ee.lskk.lumen.core.impl.LumenConfig;
 
 import java.util.List;
 

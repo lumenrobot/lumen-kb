@@ -1,6 +1,6 @@
 package id.ac.itb.ee.lskk.lumen.yago;
 
-import id.ac.itb.ee.lskk.lumen.core.impl.LumenConfig;
+import id.ac.itb.ee.lskk.lumen.core.LumenConfig;
 import id.ac.itb.ee.lskk.lumen.core.yago.LiteralFact;
 import id.ac.itb.ee.lskk.lumen.core.yago.MatchedYagoRule;
 import id.ac.itb.ee.lskk.lumen.core.yago.YagoEntityByLabelCacheStore;

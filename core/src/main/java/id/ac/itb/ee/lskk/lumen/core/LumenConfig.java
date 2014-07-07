@@ -1,17 +1,14 @@
-package id.ac.itb.ee.lskk.lumen.core.impl;
+package id.ac.itb.ee.lskk.lumen.core;
 
-import id.ac.itb.ee.lskk.lumen.core.FacebookChannel;
-import id.ac.itb.ee.lskk.lumen.core.LumenPackage;
-import id.ac.itb.ee.lskk.lumen.core.LumenSysConfig;
 import id.ac.itb.ee.lskk.lumen.core.yago.YagoEntityByLabelCacheStore;
 import id.ac.itb.ee.lskk.relexid.core.RelExConfig;
 
-import java.net.URL;
 import java.net.UnknownHostException;
 
 import javax.inject.Inject;
 
 import org.gridgain.grid.Grid;
+import org.gridgain.grid.GridConfiguration;
 import org.gridgain.grid.GridException;
 import org.gridgain.grid.GridGainSpring;
 import org.soluvas.commons.OnDemandXmiLoader;
@@ -20,8 +17,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportResource;
 
-import com.google.common.base.Preconditions;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -34,11 +31,6 @@ import com.mongodb.MongoClientURI;
 @Import({CommonsWebConfig.class, RelExConfig.class})
 public class LumenConfig {
 	
-	public static DB MONGODB;
-	
-	@Inject
-	private ApplicationContext appCtx;
-	
 	@Bean
 	public LumenSysConfig sysConfig() {
 		return new OnDemandXmiLoader<LumenSysConfig>(
@@ -50,12 +42,20 @@ public class LumenConfig {
 		return new FacebookChannel();
 	}
 	
-	@Bean(destroyMethod="close")
-	public Grid grid() throws GridException, UnknownHostException {
-		LumenConfig.MONGODB = mongoDb();
-		final URL configUrl = Preconditions.checkNotNull(LumenPackage.class.getResource("lumen.gridgain.xml"),
-				"Cannot find lumen.gridgain.xml");
-		return GridGainSpring.start(configUrl, appCtx);
+	@ImportResource("id/ac/itb/ee/lskk/lumen/core/lumen.gridgain.xml")
+	@Configuration
+	public static class GridGainConfig {
+		
+		@Inject
+		private ApplicationContext appCtx;
+		@Inject
+		private GridConfiguration gridCfg;
+		
+		@Bean(destroyMethod="close")
+		public Grid grid() throws GridException, UnknownHostException {
+			return GridGainSpring.start(gridCfg, appCtx);
+		}
+		
 	}
 	
 	@Bean(destroyMethod="close")

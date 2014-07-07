@@ -1,6 +1,6 @@
 package id.ac.itb.ee.lskk.lumen.yago;
 
-import id.ac.itb.ee.lskk.lumen.core.impl.LumenConfig;
+import id.ac.itb.ee.lskk.lumen.core.LumenConfig;
 import id.ac.itb.ee.lskk.lumen.core.yago.YagoLabel;
 
 import java.io.FileNotFoundException;

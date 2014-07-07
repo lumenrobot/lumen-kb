@@ -1,6 +1,5 @@
 package id.ac.itb.ee.lskk.lumen.yago;
 
-import id.ac.itb.ee.lskk.lumen.core.impl.LumenConfig;
 import id.ac.itb.ee.lskk.lumen.core.yago.YagoLabel;
 
 import java.util.Collection;
@@ -21,7 +20,6 @@ import org.gridgain.grid.lang.GridBiInClosure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BulkWriteOperation;
@@ -42,18 +40,14 @@ public class YagoLabelCacheStore extends GridCacheStoreAdapter<String, YagoLabel
 	
 	private static final Logger log = LoggerFactory
 			.getLogger(YagoLabelCacheStore.class);
-	private DBCollection labelColl;
-	
-//	@GridSpringResource(resourceName="mongoDb")
+
 	@Inject
 	private DB db;
 	
+	private DBCollection labelColl;
+	
 	@PostConstruct
 	public void init() {
-		// FIXME: better workaround? http://stackoverflow.com/questions/24606646/how-to-inject-a-dependency-bean-to-gridcachestore-implementation
-		if (db == null) {
-			db = Preconditions.checkNotNull(LumenConfig.MONGODB, "MongoDB instance required");
-		}
 		labelColl = db.getCollection("label");
 	}
 	

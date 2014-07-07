@@ -50,6 +50,12 @@
 			<groupId>org.apache.clerezza</groupId>
 			<artifactId>utils</artifactId>
 			<version>0.1-incubating</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging-api</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>net.rootdev</groupId>
@@ -75,6 +81,12 @@
 			<groupId>commons-validator</groupId>
 			<artifactId>commons-validator</artifactId>
 			<version>1.4.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>

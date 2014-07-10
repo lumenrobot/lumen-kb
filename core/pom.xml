@@ -73,7 +73,7 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<!-- No idea which ODF Toolkit requires RDFNode! but there it is... -->
+			<!-- No idea why ODF Toolkit requires RDFNode! but there it is... -->
 			<groupId>org.apache.jena</groupId>
 			<artifactId>jena-arq</artifactId>
 		</dependency>

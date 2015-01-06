@@ -163,7 +163,7 @@
 			<id>bippo-nexus-public</id>
 			<url>http://nexus.bippo.co.id/nexus/content/groups/public/</url>
 			<snapshots>
-				<enabled>false</enabled>
+				<enabled>true</enabled>
 			</snapshots>
 		</repository>
 		<repository>

@@ -700,6 +700,26 @@ public class LumenSysConfigImpl extends GeneralSysConfigImpl implements LumenSys
 			eNotify(new ENotificationImpl(this, Notification.SET, LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED, oldFacebookExplicitlyShared, facebookExplicitlyShared));
 	}
 
+	@Override
+	public Long getFacebookPixelId() {
+		return null;
+	}
+
+	@Override
+	public void setFacebookPixelId(Long value) {
+
+	}
+
+	@Override
+	public Boolean getFacebookPixelEnabled() {
+		return null;
+	}
+
+	@Override
+	public void setFacebookPixelEnabled(Boolean value) {
+
+	}
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

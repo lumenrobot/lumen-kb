@@ -1,5 +1,13 @@
 # Knowledge Base untuk Lumen Robot Friends
 
+## Preparations
+
+1. [Oracle JDK8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+2. [Git](http://git-scm.com/) (otherwise you can't clone this), included in `PATH`, with proper `http.proxy` configuration
+3. [MongoDB](http://www.mongodb.org)
+4. [Maven](http://maven.apache.org/), included in `PATH`, with proper proxy configuration in `~/.m2/settings.xml`
+5. [IntelliJ IDEA](http://www.jetbrains.com/idea/) or your favorite IDE, again with proper proxy configuration in Settings > HTTP
+
 ## Import lumen_lumen_dev MongoDB Dump
 
 Ready-to-use MongoDB dump (~1.2 GB uncompressed) is available from Hendy, containing converted Yago2s datasets (and maybe more).

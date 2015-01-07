@@ -2,7 +2,7 @@
 
 ## Import lumen_lumen_dev MongoDB Dump
 
-Ready-to-use MongoDB dump is available from Hendy, containing converted Yago2s datasets (and maybe more).
+Ready-to-use MongoDB dump (~1.2 GB uncompressed) is available from Hendy, containing converted Yago2s datasets (and maybe more).
 
     mongorestore -d lumen_lumen_dev /media/ceefour/passport/project_passport/lumen/mongodb/lumen_lumen_dev
 

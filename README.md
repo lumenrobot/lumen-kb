@@ -1,6 +1,15 @@
 # Knowledge Base untuk Lumen Robot Friends
 
-## Convert Yago2s data to MongoDB
+## Import lumen_lumen_dev MongoDB Dump
+
+Ready-to-use MongoDB dump is available from Hendy, containing converted Yago2s datasets (and maybe more).
+
+    mongorestore -d lumen_lumen_dev /media/ceefour/passport/project_passport/lumen/mongodb/lumen_lumen_dev
+
+## Convert Yago2s data to MongoDB (not needed)
+
+NOTE: You don't need to do this.
+This is just for documentation purpose only, when you want to regenerate MongoDB datasets from Yago2s.
 
 Download and extract Yago2s `yago2s_tsv.7z` bundle, or at least the following Yago2s datasets:
 
@@ -13,8 +22,11 @@ Copy `core/src/main/resources/META-INF/hotel.LumenSysConfig.dev.xmi` to `cli/src
 
     mvn -pl .,core,cli -DskipTests install; mvn -DskipTests -pl cli compile dependency:copy-dependencies
     # TODO: currently Linux only
+    # yagolabelstomongo takes ~30 mins! (i7 3770K, SSD, 8GB RAM)
     ./yagolabelstomongo /media/ceefour/passport/databank/yago2s/yagoLabels.tsv
+    # this is about ~5 mins
     ./yagofactstomongo /media/ceefour/passport/databank/yago2s/yagoFacts.tsv
+    # also ~5 mins
     ./yagoliteralfactstomongo /media/ceefour/passport/databank/yago2s/yagoLiteralFacts.tsv
 
 ## Deploying

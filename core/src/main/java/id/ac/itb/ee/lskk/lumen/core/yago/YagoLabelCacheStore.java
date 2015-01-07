@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import com.google.common.base.Preconditions;
 import org.gridgain.grid.GridException;
 import org.gridgain.grid.cache.GridCacheTx;
 import org.gridgain.grid.cache.store.GridCacheStoreAdapter;
@@ -46,6 +47,7 @@ public class YagoLabelCacheStore extends GridCacheStoreAdapter<String, YagoLabel
 	
 	@PostConstruct
 	public void init() {
+		Preconditions.checkNotNull(db, "MongoDB 'db' must not be null, is Spring configured correctly?");
 		labelColl = db.getCollection("label");
 	}
 	

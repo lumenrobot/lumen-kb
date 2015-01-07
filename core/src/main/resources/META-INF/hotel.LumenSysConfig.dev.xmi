@@ -5,8 +5,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:lumen="http://lskk.ee.itb.ac.id/schema/lumen.core/1.0"
     xsi:schemaLocation="http://lskk.ee.itb.ac.id/schema/lumen.core/1.0 ../id/ac/itb/ee/lskk/lumen/core/lumen.ecore"
+    tenantEnv="dev"
     tenantId="lumen"
     mongoUri="mongodb://localhost/lumen_lumen_dev"
     facebookProfileId="100007930095303"
-    facebookProfileName="Arkan Lumen"
-    tenantEnv="dev"/>
+    facebookProfileName="Arkan Lumen"/>

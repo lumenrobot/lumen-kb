@@ -68,11 +68,11 @@ public class YagoFactsToMongo {
 	 * @throws FileNotFoundException 
 	 */
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		Preconditions.checkArgument(args.length == 1, "Usage: yagofactstomongo path/to/yagoFacts.ttl");
+		Preconditions.checkArgument(args.length == 1, "Usage: yagofactstomongo path/to/yagoFacts.tsv");
 		File yagoFactsTsvFile = new File(args[0]);
 		log.info("Importing '{}'...", yagoFactsTsvFile);
 		MongoClient mongo = new MongoClient(new MongoClientURI("mongodb://localhost/"));
-		DB db = mongo.getDB("yago_dev");
+		DB db = mongo.getDB("lumen_lumen_dev");
 		DBCollection factColl = db.getCollection("fact");
 		log.info("Dropping fact collection...");
 		factColl.drop();

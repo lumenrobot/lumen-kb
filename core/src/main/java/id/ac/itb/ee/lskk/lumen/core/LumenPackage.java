@@ -103,6 +103,15 @@ public interface LumenPackage extends EPackage {
 	int LUMEN_SYS_CONFIG__TENANT_ID = CommonsPackage.GENERAL_SYS_CONFIG__TENANT_ID;
 
 	/**
+	 * The feature id for the '<em><b>Ssl Supported</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LUMEN_SYS_CONFIG__SSL_SUPPORTED = CommonsPackage.GENERAL_SYS_CONFIG__SSL_SUPPORTED;
+
+	/**
 	 * The feature id for the '<em><b>Mongo Uri</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -202,13 +211,31 @@ public interface LumenPackage extends EPackage {
 	int LUMEN_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 10;
 
 	/**
+	 * The feature id for the '<em><b>Facebook Pixel Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ID = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 11;
+
+	/**
+	 * The feature id for the '<em><b>Facebook Pixel Enabled</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ENABLED = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 12;
+
+	/**
 	 * The feature id for the '<em><b>Instagram Screen Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__INSTAGRAM_SCREEN_NAME = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 11;
+	int LUMEN_SYS_CONFIG__INSTAGRAM_SCREEN_NAME = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>You Tube Tenant Screen Name</b></em>' attribute.
@@ -217,7 +244,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__YOU_TUBE_TENANT_SCREEN_NAME = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 12;
+	int LUMEN_SYS_CONFIG__YOU_TUBE_TENANT_SCREEN_NAME = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Pinterest Tenant Screen Name</b></em>' attribute.
@@ -226,7 +253,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__PINTEREST_TENANT_SCREEN_NAME = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 13;
+	int LUMEN_SYS_CONFIG__PINTEREST_TENANT_SCREEN_NAME = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Twitter Consumer Key</b></em>' attribute.
@@ -235,7 +262,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__TWITTER_CONSUMER_KEY = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 14;
+	int LUMEN_SYS_CONFIG__TWITTER_CONSUMER_KEY = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 16;
 
 	/**
 	 * The feature id for the '<em><b>Twitter Consumer Secret</b></em>' attribute.
@@ -244,7 +271,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__TWITTER_CONSUMER_SECRET = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 15;
+	int LUMEN_SYS_CONFIG__TWITTER_CONSUMER_SECRET = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 17;
 
 	/**
 	 * The feature id for the '<em><b>Twitter Tenant Screen Name</b></em>' attribute.
@@ -253,7 +280,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__TWITTER_TENANT_SCREEN_NAME = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 16;
+	int LUMEN_SYS_CONFIG__TWITTER_TENANT_SCREEN_NAME = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 18;
 
 	/**
 	 * The feature id for the '<em><b>Twitter Tenant Access Token</b></em>' attribute.
@@ -262,7 +289,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__TWITTER_TENANT_ACCESS_TOKEN = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 17;
+	int LUMEN_SYS_CONFIG__TWITTER_TENANT_ACCESS_TOKEN = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 19;
 
 	/**
 	 * The feature id for the '<em><b>Twitter Tenant Access Token Secret</b></em>' attribute.
@@ -271,7 +298,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__TWITTER_TENANT_ACCESS_TOKEN_SECRET = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 18;
+	int LUMEN_SYS_CONFIG__TWITTER_TENANT_ACCESS_TOKEN_SECRET = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 20;
 
 	/**
 	 * The feature id for the '<em><b>Tenant Env</b></em>' attribute.
@@ -280,7 +307,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG__TENANT_ENV = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 19;
+	int LUMEN_SYS_CONFIG__TENANT_ENV = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 21;
 
 	/**
 	 * The number of structural features of the '<em>Sys Config</em>' class.
@@ -289,7 +316,7 @@ public interface LumenPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LUMEN_SYS_CONFIG_FEATURE_COUNT = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 20;
+	int LUMEN_SYS_CONFIG_FEATURE_COUNT = CommonsPackage.GENERAL_SYS_CONFIG_FEATURE_COUNT + 22;
 
 	/**
 	 * The operation id for the '<em>Expand</em>' operation.

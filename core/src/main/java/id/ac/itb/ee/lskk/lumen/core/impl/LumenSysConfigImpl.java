@@ -35,6 +35,8 @@ import org.soluvas.socmed.YouTubeSysConfig;
  *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getFacebookTenantPageUsername <em>Facebook Tenant Page Username</em>}</li>
  *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getFacebookTenantPublishEnabled <em>Facebook Tenant Publish Enabled</em>}</li>
  *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getFacebookExplicitlyShared <em>Facebook Explicitly Shared</em>}</li>
+ *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getFacebookPixelId <em>Facebook Pixel Id</em>}</li>
+ *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getFacebookPixelEnabled <em>Facebook Pixel Enabled</em>}</li>
  *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getInstagramScreenName <em>Instagram Screen Name</em>}</li>
  *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getYouTubeTenantScreenName <em>You Tube Tenant Screen Name</em>}</li>
  *   <li>{@link id.ac.itb.ee.lskk.lumen.core.impl.LumenSysConfigImpl#getPinterestTenantScreenName <em>Pinterest Tenant Screen Name</em>}</li>
@@ -269,6 +271,46 @@ public class LumenSysConfigImpl extends GeneralSysConfigImpl implements LumenSys
 	 * @ordered
 	 */
 	protected Boolean facebookExplicitlyShared = FACEBOOK_EXPLICITLY_SHARED_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getFacebookPixelId() <em>Facebook Pixel Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFacebookPixelId()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Long FACEBOOK_PIXEL_ID_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getFacebookPixelId() <em>Facebook Pixel Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFacebookPixelId()
+	 * @generated
+	 * @ordered
+	 */
+	protected Long facebookPixelId = FACEBOOK_PIXEL_ID_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getFacebookPixelEnabled() <em>Facebook Pixel Enabled</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFacebookPixelEnabled()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Boolean FACEBOOK_PIXEL_ENABLED_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getFacebookPixelEnabled() <em>Facebook Pixel Enabled</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFacebookPixelEnabled()
+	 * @generated
+	 * @ordered
+	 */
+	protected Boolean facebookPixelEnabled = FACEBOOK_PIXEL_ENABLED_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getInstagramScreenName() <em>Instagram Screen Name</em>}' attribute.
@@ -700,24 +742,46 @@ public class LumenSysConfigImpl extends GeneralSysConfigImpl implements LumenSys
 			eNotify(new ENotificationImpl(this, Notification.SET, LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED, oldFacebookExplicitlyShared, facebookExplicitlyShared));
 	}
 
-	@Override
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Long getFacebookPixelId() {
-		return null;
+		return facebookPixelId;
 	}
 
-	@Override
-	public void setFacebookPixelId(Long value) {
-
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setFacebookPixelId(Long newFacebookPixelId) {
+		Long oldFacebookPixelId = facebookPixelId;
+		facebookPixelId = newFacebookPixelId;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ID, oldFacebookPixelId, facebookPixelId));
 	}
 
-	@Override
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Boolean getFacebookPixelEnabled() {
-		return null;
+		return facebookPixelEnabled;
 	}
 
-	@Override
-	public void setFacebookPixelEnabled(Boolean value) {
-
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setFacebookPixelEnabled(Boolean newFacebookPixelEnabled) {
+		Boolean oldFacebookPixelEnabled = facebookPixelEnabled;
+		facebookPixelEnabled = newFacebookPixelEnabled;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ENABLED, oldFacebookPixelEnabled, facebookPixelEnabled));
 	}
 
 	/**
@@ -939,6 +1003,10 @@ public class LumenSysConfigImpl extends GeneralSysConfigImpl implements LumenSys
 				return getFacebookTenantPublishEnabled();
 			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED:
 				return getFacebookExplicitlyShared();
+			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ID:
+				return getFacebookPixelId();
+			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ENABLED:
+				return getFacebookPixelEnabled();
 			case LumenPackage.LUMEN_SYS_CONFIG__INSTAGRAM_SCREEN_NAME:
 				return getInstagramScreenName();
 			case LumenPackage.LUMEN_SYS_CONFIG__YOU_TUBE_TENANT_SCREEN_NAME:
@@ -1001,6 +1069,12 @@ public class LumenSysConfigImpl extends GeneralSysConfigImpl implements LumenSys
 				return;
 			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED:
 				setFacebookExplicitlyShared((Boolean)newValue);
+				return;
+			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ID:
+				setFacebookPixelId((Long)newValue);
+				return;
+			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ENABLED:
+				setFacebookPixelEnabled((Boolean)newValue);
 				return;
 			case LumenPackage.LUMEN_SYS_CONFIG__INSTAGRAM_SCREEN_NAME:
 				setInstagramScreenName((String)newValue);
@@ -1074,6 +1148,12 @@ public class LumenSysConfigImpl extends GeneralSysConfigImpl implements LumenSys
 			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED:
 				setFacebookExplicitlyShared(FACEBOOK_EXPLICITLY_SHARED_EDEFAULT);
 				return;
+			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ID:
+				setFacebookPixelId(FACEBOOK_PIXEL_ID_EDEFAULT);
+				return;
+			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ENABLED:
+				setFacebookPixelEnabled(FACEBOOK_PIXEL_ENABLED_EDEFAULT);
+				return;
 			case LumenPackage.LUMEN_SYS_CONFIG__INSTAGRAM_SCREEN_NAME:
 				setInstagramScreenName(INSTAGRAM_SCREEN_NAME_EDEFAULT);
 				return;
@@ -1135,6 +1215,10 @@ public class LumenSysConfigImpl extends GeneralSysConfigImpl implements LumenSys
 				return FACEBOOK_TENANT_PUBLISH_ENABLED_EDEFAULT == null ? facebookTenantPublishEnabled != null : !FACEBOOK_TENANT_PUBLISH_ENABLED_EDEFAULT.equals(facebookTenantPublishEnabled);
 			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED:
 				return FACEBOOK_EXPLICITLY_SHARED_EDEFAULT == null ? facebookExplicitlyShared != null : !FACEBOOK_EXPLICITLY_SHARED_EDEFAULT.equals(facebookExplicitlyShared);
+			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ID:
+				return FACEBOOK_PIXEL_ID_EDEFAULT == null ? facebookPixelId != null : !FACEBOOK_PIXEL_ID_EDEFAULT.equals(facebookPixelId);
+			case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ENABLED:
+				return FACEBOOK_PIXEL_ENABLED_EDEFAULT == null ? facebookPixelEnabled != null : !FACEBOOK_PIXEL_ENABLED_EDEFAULT.equals(facebookPixelEnabled);
 			case LumenPackage.LUMEN_SYS_CONFIG__INSTAGRAM_SCREEN_NAME:
 				return INSTAGRAM_SCREEN_NAME_EDEFAULT == null ? instagramScreenName != null : !INSTAGRAM_SCREEN_NAME_EDEFAULT.equals(instagramScreenName);
 			case LumenPackage.LUMEN_SYS_CONFIG__YOU_TUBE_TENANT_SCREEN_NAME:
@@ -1182,6 +1266,8 @@ public class LumenSysConfigImpl extends GeneralSysConfigImpl implements LumenSys
 				case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PAGE_USERNAME: return SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_PAGE_USERNAME;
 				case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PUBLISH_ENABLED: return SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_PUBLISH_ENABLED;
 				case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED: return SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED;
+				case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ID: return SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_PIXEL_ID;
+				case LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ENABLED: return SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_PIXEL_ENABLED;
 				default: return -1;
 			}
 		}
@@ -1241,6 +1327,8 @@ public class LumenSysConfigImpl extends GeneralSysConfigImpl implements LumenSys
 				case SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_PAGE_USERNAME: return LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PAGE_USERNAME;
 				case SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_TENANT_PUBLISH_ENABLED: return LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_TENANT_PUBLISH_ENABLED;
 				case SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED: return LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_EXPLICITLY_SHARED;
+				case SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_PIXEL_ID: return LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ID;
+				case SocmedPackage.FACEBOOK_SYS_CONFIG__FACEBOOK_PIXEL_ENABLED: return LumenPackage.LUMEN_SYS_CONFIG__FACEBOOK_PIXEL_ENABLED;
 				default: return -1;
 			}
 		}
@@ -1307,6 +1395,10 @@ public class LumenSysConfigImpl extends GeneralSysConfigImpl implements LumenSys
 		result.append(facebookTenantPublishEnabled);
 		result.append(", facebookExplicitlyShared: ");
 		result.append(facebookExplicitlyShared);
+		result.append(", facebookPixelId: ");
+		result.append(facebookPixelId);
+		result.append(", facebookPixelEnabled: ");
+		result.append(facebookPixelEnabled);
 		result.append(", instagramScreenName: ");
 		result.append(instagramScreenName);
 		result.append(", youTubeTenantScreenName: ");

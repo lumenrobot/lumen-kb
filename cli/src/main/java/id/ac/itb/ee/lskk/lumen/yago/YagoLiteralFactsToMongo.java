@@ -73,11 +73,11 @@ public class YagoLiteralFactsToMongo {
 	 * @throws FileNotFoundException 
 	 */
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		Preconditions.checkArgument(args.length == 1, "Usage: yagoliteralfacts2mongo path/to/yagoLiteralFacts.ttl");
+		Preconditions.checkArgument(args.length == 1, "Usage: yagoliteralfacts2mongo path/to/yagoLiteralFacts.tsv");
 		File yagoLiteralFactsTsvFile = new File(args[0]);
 		log.info("Importing '{}'...", yagoLiteralFactsTsvFile);
 		MongoClient mongo = new MongoClient(new MongoClientURI("mongodb://localhost/"));
-		DB db = mongo.getDB("yago_dev");
+		DB db = mongo.getDB("lumen_lumen_dev");
 		DBCollection literalFactColl = db.getCollection("literalFact");
 		log.info("Dropping {} collection...", literalFactColl.getName());
 		literalFactColl.drop();

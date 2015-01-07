@@ -1,5 +1,6 @@
 package id.ac.itb.ee.lskk.lumen.core;
 
+import com.google.common.base.Preconditions;
 import id.ac.itb.ee.lskk.lumen.core.yago.YagoAnswerer;
 import id.ac.itb.ee.lskk.lumen.core.yago.YagoEntityByLabelCacheStore;
 import id.ac.itb.ee.lskk.relexid.core.RelExConfig;
@@ -68,6 +69,7 @@ public class LumenConfig {
 	
 	@Bean
 	public DB mongoDb() throws UnknownHostException, UnsupportedEncodingException {
+		Preconditions.checkNotNull(sysConfig().getMongoUri(), "LumenSysConfig.mongoUri required");
 		return MongoUtils.getDb(new MongoClientURI(sysConfig().getMongoUri()), ReadPreference.primary());
 	}
 	

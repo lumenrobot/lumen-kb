@@ -1,5 +1,6 @@
 package id.ac.itb.ee.lskk.lumen.yago;
 
+import id.ac.itb.ee.lskk.lumen.core.LumenConfig;
 import id.ac.itb.ee.lskk.lumen.core.yago.YagoLabel;
 
 import java.io.File;
@@ -26,6 +27,10 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Configuration;
+
+import javax.inject.Inject;
 
 /**
  * Import YAGO labels to MongoDB.
@@ -75,6 +80,7 @@ import com.mongodb.MongoClientURI;
  * 
  * @author ceefour
  */
+@Configuration
 public class YagoLabelsToMongo {
 
 	private static final Logger log = LoggerFactory
@@ -90,49 +96,45 @@ public class YagoLabelsToMongo {
 			return input;
 		}
 	}
-	
-	/**
-	 * @param args yagoFacts.tsv file
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
-	 * @throws GridException 
-	 */
-	public static void main(String[] args) throws FileNotFoundException, IOException, GridException {
-		Preconditions.checkArgument(args.length == 1, "Usage: yagolabels2mongo path/to/yagoLabels.ttl");
+
+	@Inject
+	Grid grid;
+
+	public void run(String[] args) throws FileNotFoundException, IOException, GridException {
+		Preconditions.checkArgument(args.length == 1, "Usage: yagolabels2mongo path/to/yagoLabels.tsv");
 		File yagoLabelsTsvFile = new File(args[0]);
 		log.info("Importing '{}'...", yagoLabelsTsvFile);
 		MongoClient mongo = new MongoClient(new MongoClientURI("mongodb://localhost/"));
-		DB db = mongo.getDB("yago_dev");
+		DB db = mongo.getDB("lumen_lumen_dev");
 		DBCollection labelColl = db.getCollection("label");
 		log.info("Dropping {} collection...", labelColl.getName());
 		labelColl.drop();
 		log.info("{} collection dropped", labelColl.getName());
-		
-		try (Grid grid = GridGain.start(AnswerYagoFactTests.class.getResource("yago.gridgain.xml"))) {
-			GridCache<String, YagoLabel> labelCache = YagoLabel.cache(grid);
-			labelCache.reloadAll();
-			
-			GridClosure<String[], Void> rowProcessor = (GridClosure<String[], Void>) (it) -> {
-				Matcher matcher = ENG.matcher(it[3]);
-				if (!matcher.matches()) {
-					return null;
-				}
-				final String labelText = matcher.group(1);
-				final String resName = removeBrackets(it[1]);
-				String labelProperty = removeBrackets(it[2]); // skos:prefLabel, rdfs:label, isPreferredMeaningOf, hasFamilyName
-				
+
+		GridCache<String, YagoLabel> labelCache = YagoLabel.cache(grid);
+		labelCache.reloadAll();
+
+		GridClosure<String[], Void> rowProcessor = (GridClosure<String[], Void>) (it) -> {
+			Matcher matcher = ENG.matcher(it[3]);
+			if (!matcher.matches()) {
+				return null;
+			}
+			final String labelText = matcher.group(1);
+			final String resName = removeBrackets(it[1]);
+			String labelProperty = removeBrackets(it[2]); // skos:prefLabel, rdfs:label, isPreferredMeaningOf, hasFamilyName
+
+			try {
+				Preconditions.checkState(labelCache.lock(resName, 30000),
+						"Cannot lock '%s'", resName);
 				try {
-					Preconditions.checkState(labelCache.lock(resName, 30000),
-							"Cannot lock '%s'", resName);
-					try {
-						YagoLabel label = labelCache.get(resName);
+					YagoLabel label = labelCache.get(resName);
 
-						if (label == null) {
-							label = new YagoLabel();
+					if (label == null) {
+						label = new YagoLabel();
 //							entityCount++;
-						}
+					}
 
-						switch (labelProperty) {
+					switch (labelProperty) {
 						case "skos:prefLabel":
 							label.setPrefLabel(labelText);
 							break;
@@ -152,37 +154,37 @@ public class YagoLabelsToMongo {
 							return null;
 						default:
 							throw new RuntimeException("Unknown label property: " + labelProperty);
-						}
-						
-						labelCache.putx(resName, label);
-						//labelCount++;
-					} finally {
-						labelCache.unlock(resName);
 					}
-				} catch (Exception e) {
-					Throwables.propagate(e);
+
+					labelCache.putx(resName, label);
+					//labelCount++;
+				} finally {
+					labelCache.unlock(resName);
 				}
-				return null;
-			};
-			
-			int rowCount = 0;
+			} catch (Exception e) {
+				Throwables.propagate(e);
+			}
+			return null;
+		};
+
+		int rowCount = 0;
 //			int labelCount = 0;
 //			int entityCount = 0;
-			log.info("Loading '{}'...", yagoLabelsTsvFile);
-			try (CSVReader reader = new CSVReader(new FileReader(yagoLabelsTsvFile), '\t', CSVWriter.NO_QUOTE_CHARACTER)) {
-				while (true) {
-					String[] row = reader.readNext();
-					if (row == null || row.length == 0) {
-						break;
-					}
-					
-					grid.compute().apply(rowProcessor, row);
-					
-					rowCount++;
-					if (rowCount % 100000 == 0) {
-						log.info("{} rows queued...", rowCount);
-					}
-					
+		log.info("Loading '{}'...", yagoLabelsTsvFile);
+		try (CSVReader reader = new CSVReader(new FileReader(yagoLabelsTsvFile), '\t', CSVWriter.NO_QUOTE_CHARACTER)) {
+			while (true) {
+				String[] row = reader.readNext();
+				if (row == null || row.length == 0) {
+					break;
+				}
+
+				grid.compute().apply(rowProcessor, row);
+
+				rowCount++;
+				if (rowCount % 100000 == 0) {
+					log.info("{} rows queued...", rowCount);
+				}
+
 //					BasicDBObject dbo = new BasicDBObject(ImmutableMap.of(
 //							"_id", resName,
 //							"l", label));
@@ -195,11 +197,23 @@ public class YagoLabelsToMongo {
 //					if (labelCount % 10000 == 0) {
 //						log.info("Inserted {} labels for {} entities", labelCount, entityCount);
 //					}
-				}
 			}
-//			log.info("Inserted {} labels for {} entities", labelCount, entityCount);
 		}
-		
+//			log.info("Inserted {} labels for {} entities", labelCount, entityCount);
+	}
+	
+	/**
+	 * @param args yagoFacts.tsv file
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 * @throws GridException 
+	 */
+	public static void main(String[] args) throws FileNotFoundException, IOException, GridException {
+		try (AnnotationConfigApplicationContext appCtx = new AnnotationConfigApplicationContext(
+				LumenConfig.class, YagoLabelsToMongo.class)) {
+			final YagoLabelsToMongo app = appCtx.getBean(YagoLabelsToMongo.class);
+			app.run(args);
+		}
 	}
 
 }

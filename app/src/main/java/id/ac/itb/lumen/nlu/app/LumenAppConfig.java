@@ -1,4 +1,4 @@
-package id.ac.itb.ee.lskk.lumen.app;
+package id.ac.itb.lumen.nlu.app;
 
 import id.ac.itb.ee.lskk.lumen.core.FacebookChannel;
 import id.ac.itb.ee.lskk.lumen.core.FacebookChannel.FacebookAction;

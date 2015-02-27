@@ -37,6 +37,10 @@ Copy `core/src/main/resources/META-INF/hotel.LumenSysConfig.dev.xmi` to `cli/src
     # also ~5 mins
     ./yagoliteralfactstomongo /media/ceefour/passport/databank/yago2s/yagoLiteralFacts.tsv
 
+## Building and Running
+
+1. Logging: In folder `app/src/main/resources`, copy `logback-dev.xml` to `logback.xml`
+
 ## Deploying
 
 Hendy's self note:

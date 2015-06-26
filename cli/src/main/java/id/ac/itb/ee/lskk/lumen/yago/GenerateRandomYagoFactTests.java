@@ -16,7 +16,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import au.com.bytecode.opencsv.CSVReader;
+import com.opencsv.CSVReader;
 
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.BasicDBObject;
@@ -42,7 +42,7 @@ public class GenerateRandomYagoFactTests {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+	public static void main(String[] args) throws IOException {
 		URL yagoPropertiesTsv = GenerateRandomYagoFactTests.class.getResource("yago-properties.tsv");
 		log.info("Loading '{}'...", yagoPropertiesTsv);
 		MongoClient mongo = new MongoClient(new MongoClientURI("mongodb://localhost/"));

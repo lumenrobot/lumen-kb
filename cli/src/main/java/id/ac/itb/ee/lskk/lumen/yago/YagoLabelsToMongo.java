@@ -1,36 +1,31 @@
 package id.ac.itb.ee.lskk.lumen.yago;
 
-import id.ac.itb.ee.lskk.lumen.core.LumenConfig;
-import id.ac.itb.ee.lskk.lumen.core.yago.YagoLabel;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.gridgain.grid.Grid;
-import org.gridgain.grid.GridException;
-import org.gridgain.grid.GridGain;
-import org.gridgain.grid.cache.GridCache;
-import org.gridgain.grid.lang.GridClosure;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import id.ac.itb.ee.lskk.lumen.core.LumenConfig;
+import id.ac.itb.ee.lskk.lumen.core.yago.YagoLabel;
+import org.gridgain.grid.Grid;
+import org.gridgain.grid.GridException;
+import org.gridgain.grid.cache.GridCache;
+import org.gridgain.grid.lang.GridClosure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Inject;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Import YAGO labels to MongoDB.

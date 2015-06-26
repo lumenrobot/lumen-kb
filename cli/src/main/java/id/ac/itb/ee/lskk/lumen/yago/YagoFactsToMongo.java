@@ -12,8 +12,8 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
@@ -67,7 +67,7 @@ public class YagoFactsToMongo {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+	public static void main(String[] args) throws IOException {
 		Preconditions.checkArgument(args.length == 1, "Usage: yagofactstomongo path/to/yagoFacts.tsv");
 		File yagoFactsTsvFile = new File(args[0]);
 		log.info("Importing '{}'...", yagoFactsTsvFile);

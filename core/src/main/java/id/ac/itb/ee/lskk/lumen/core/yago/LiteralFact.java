@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableList;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.joda.money.format.MoneyFormatter;
@@ -130,7 +131,7 @@ public class LiteralFact {
 		}
 		StringWriter sw_en = new StringWriter();
 		MF.compile(new StringReader(answerTemplate_en), "en")
-			.run(sw_en, new Object[] { ImmutableMap.of("subject", subjectLabel, "object", objectText_en) });
+			.run(sw_en, ImmutableList.of(ImmutableMap.of("subject", subjectLabel, "object", objectText_en)));
 		return sw_en.toString();
 	}
 
@@ -179,7 +180,7 @@ public class LiteralFact {
 		}
 		StringWriter sw_id = new StringWriter();
 		MF.compile(new StringReader(answerTemplate_id), "id")
-			.run(sw_id, new Object[] { ImmutableMap.of("subject", subjectLabel, "object", objectText_id) });
+			.run(sw_id, ImmutableList.of( ImmutableMap.of("subject", subjectLabel, "object", objectText_id) ));
 		return sw_id.toString();
 	}
 

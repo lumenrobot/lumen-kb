@@ -1,5 +1,6 @@
 package id.ac.itb.ee.lskk.lumen.core.yago;
 
+import com.google.common.collect.*;
 import id.ac.itb.ee.lskk.lumen.core.LumenException;
 
 import java.io.StringReader;
@@ -29,11 +30,6 @@ import org.slf4j.LoggerFactory;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.base.Throwables;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder.ListMultimapBuilder;
 import com.google.common.html.HtmlEscapers;
 import com.mongodb.BasicDBObject;
@@ -301,13 +297,15 @@ public class YagoAnswerer {
 							}
 							
 							final StringWriter sw_en = new StringWriter();
-							MF.compile(new StringReader(foundMatcher.getRule().getAnswerTemplateHtml_en()), "en").run(sw_en, 
-									new Object[] { ImmutableMap.of("subject", foundMatcher.getSubject(), "object", objectText) });
+							MF.compile(new StringReader(foundMatcher.getRule().getAnswerTemplateHtml_en()), "en")
+									.run(sw_en, ImmutableList.of(
+											ImmutableMap.of("subject", foundMatcher.getSubject(), "object", objectText)));
 							log.info("English: {}", sw_en);
 							
 							final StringWriter sw_id = new StringWriter();
-							MF.compile(new StringReader(foundMatcher.getRule().getAnswerTemplateHtml_id()), "id").run(sw_id, 
-									new Object[] { ImmutableMap.of("subject", foundMatcher.getSubject(), "object", objectText) });
+							MF.compile(new StringReader(foundMatcher.getRule().getAnswerTemplateHtml_id()), "id")
+									.run(sw_id, ImmutableList.of(
+											ImmutableMap.of("subject", foundMatcher.getSubject(), "object", objectText) ));
 							log.info("Indonesian: {}", sw_id);
 							
 							return new Answer(AnswerKind.OK, null, sw_en.toString(), null, sw_id.toString());

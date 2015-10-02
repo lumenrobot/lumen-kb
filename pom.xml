@@ -17,7 +17,7 @@
 		<module>cli</module>
 	</modules>
 
-	<url>http://lumen.lskk.ee.itb.ac.id/</url>
+	<url>http://www.lskk.org/</url>
 	<scm>
 		<connection>scm:git:git@github.com:ceefour/lumen-kb.git</connection>
 		<url>https://github.com/ceefour/lumen-kb</url>

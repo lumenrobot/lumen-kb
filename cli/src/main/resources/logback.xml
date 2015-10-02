@@ -11,6 +11,7 @@
 	<logger name="org.apache.directory.shared" level="INFO" />
 	<logger name="id.co" level="DEBUG" />
 	<logger name="id.ac" level="DEBUG" />
+	<logger name="org.lskk" level="DEBUG"/>
 	<logger name="org.soluvas" level="DEBUG" />
 	<logger name="com.soluvas" level="DEBUG" />
 	<logger name="org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider" level="WARN"/>

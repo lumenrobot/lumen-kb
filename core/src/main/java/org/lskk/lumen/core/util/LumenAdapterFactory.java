@@ -2,27 +2,14 @@
  */
 package org.lskk.lumen.core.util;
 
-import id.ac.itb.ee.lskk.lumen.core.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import org.lskk.lumen.core.LumenPackage;
 import org.lskk.lumen.core.LumenSysConfig;
-import org.soluvas.commons.Expandable;
-import org.soluvas.commons.GeneralSysConfig;
-import org.soluvas.commons.MongoSysConfig;
-import org.soluvas.commons.SysConfig;
-import org.soluvas.commons.Timestamped;
-import org.soluvas.socmed.FacebookSysConfig;
-import org.soluvas.socmed.InstagramSysConfig;
-import org.soluvas.socmed.PinterestSysConfig;
-import org.soluvas.socmed.TwitterSysConfig;
-import org.soluvas.socmed.YouTubeSysConfig;
+import org.soluvas.commons.*;
+import org.soluvas.socmed.*;
 
 /**
  * <!-- begin-user-doc -->

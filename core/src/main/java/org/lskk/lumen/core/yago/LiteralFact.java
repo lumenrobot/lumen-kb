@@ -1,5 +1,17 @@
 package org.lskk.lumen.core.yago;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.MustacheFactory;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import org.javamoney.moneta.Money;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nullable;
+import javax.money.Monetary;
+import javax.money.format.MonetaryAmountFormat;
+import javax.money.format.MonetaryFormats;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.math.BigDecimal;
@@ -14,20 +26,6 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.Nullable;
-
-import com.google.common.collect.ImmutableList;
-import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
-import org.joda.money.format.MoneyFormatter;
-import org.joda.money.format.MoneyFormatterBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.MustacheFactory;
-import com.google.common.collect.ImmutableMap;
-
 public class LiteralFact {
 	private static final MustacheFactory MF = new DefaultMustacheFactory();
 	private static final Logger log = LoggerFactory
@@ -38,8 +36,8 @@ public class LiteralFact {
 	private static final NumberFormat ID_NUM = NumberFormat.getNumberInstance(INDONESIAN);
 	private static final NumberFormat EN_PCT = NumberFormat.getPercentInstance(ENGLISH);
 	private static final NumberFormat ID_PCT = NumberFormat.getPercentInstance(INDONESIAN);
-	private static final MoneyFormatter MONEY_EN = new MoneyFormatterBuilder().appendCurrencySymbolLocalized().appendAmountLocalized().toFormatter(ENGLISH);
-	private static final MoneyFormatter MONEY_ID = new MoneyFormatterBuilder().appendCurrencySymbolLocalized().appendAmountLocalized().toFormatter(INDONESIAN);
+	private static final MonetaryAmountFormat MONEY_EN = MonetaryFormats.getAmountFormat(ENGLISH);
+	private static final MonetaryAmountFormat MONEY_ID = MonetaryFormats.getAmountFormat(INDONESIAN);
 	private static final Pattern YEAR_MONTH = Pattern.compile("^([0-9]+-[0-9]+)");
 	private static final Pattern YEAR_ONLY = Pattern.compile("^([0-9]+)");
 	
@@ -98,11 +96,11 @@ public class LiteralFact {
 		} else if ("degrees".equals(unit)) {
 			objectText_en = EN_NUM.format(literal) + "°";
 		} else if ("dollar".equals(unit)) {
-			Money money = Money.of(CurrencyUnit.USD, new BigDecimal(literal.toString()));
-			objectText_en = MONEY_EN.print(money);
+			Money money = Money.of(new BigDecimal(literal.toString()), Monetary.getCurrency("USD"));
+			objectText_en = MONEY_EN.format(money);
 		} else if ("euro".equals(unit)) {
-			Money money = Money.of(CurrencyUnit.EUR, new BigDecimal(literal.toString()));
-			objectText_en = MONEY_EN.print(money);
+			Money money = Money.of(new BigDecimal(literal.toString()), Monetary.getCurrency("EUR"));
+			objectText_en = MONEY_EN.format(money);
 		} else if ("yagoMonetaryValue".equals(unit)) {
 			// TODO: currency
 			objectText_en = EN_NUM.format(literal);
@@ -147,11 +145,11 @@ public class LiteralFact {
 		} else if ("degrees".equals(unit)) {
 			objectText_id = ID_NUM.format(literal) + "°";
 		} else if ("dollar".equals(unit)) {
-			Money money = Money.of(CurrencyUnit.USD, new BigDecimal(literal.toString()));
-			objectText_id = MONEY_ID.print(money);
+			Money money = Money.of(new BigDecimal(literal.toString()), Monetary.getCurrency("USD"));
+			objectText_id = MONEY_ID.format(money);
 		} else if ("euro".equals(unit)) {
-			Money money = Money.of(CurrencyUnit.EUR, new BigDecimal(literal.toString()));
-			objectText_id = MONEY_ID.print(money);
+			Money money = Money.of(new BigDecimal(literal.toString()), Monetary.getCurrency("EUR"));
+			objectText_id = MONEY_ID.format(money);
 		} else if ("yagoMonetaryValue".equals(unit)) {
 			// TODO: currency
 			objectText_id = ID_NUM.format(literal);

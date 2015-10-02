@@ -69,7 +69,7 @@
 					<programs>
 						<program>
 							<id>lumen</id>
-							<mainClass>id.ac.itb.ee.lskk.lumen.cli.LumenCli</mainClass>
+							<mainClass>org.lskk.lumen.cli.LumenCli</mainClass>
 						</program>
 					</programs>
 				</configuration>

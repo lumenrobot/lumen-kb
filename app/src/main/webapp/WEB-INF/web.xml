@@ -82,7 +82,7 @@
 	</context-param>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>id.ac.itb.lumen.nlu.app.LumenAppConfig</param-value>
+		<param-value>org.lumen.nlu.app.LumenAppConfig</param-value>
 	</context-param>
 <!-- 	<context-param> -->
 <!-- 		<param-name>contextInitializerClasses</param-name> -->

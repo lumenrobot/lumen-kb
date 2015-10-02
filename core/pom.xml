@@ -2,20 +2,20 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>id.ac.itb.ee.lskk</groupId>
-		<artifactId>id.ac.itb.ee.lskk.lumen.parent</artifactId>
+		<groupId>org.lskk</groupId>
+		<artifactId>org.lskk.lumen.parent</artifactId>
 		<version>0.1.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>id.ac.itb.ee.lskk.lumen.core</artifactId>
+	<artifactId>org.lskk.lumen.kb.core</artifactId>
 	<packaging>jar</packaging>
 	<name>Lumen Knowledge Base Core</name>
 	<description>Core knowledge base of Lumen robot friend.</description>
 
 	<dependencies>
 		<dependency>
-			<groupId>id.ac.itb.ee.lskk</groupId>
-			<artifactId>id.ac.itb.ee.lskk.relexid.core</artifactId>
+			<groupId>org.lskk</groupId>
+			<artifactId>org.lskk.relexid.core</artifactId>
 		</dependency>
 
 		<dependency>

@@ -3,8 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>id.ac.itb.ee.lskk</groupId>
-	<artifactId>id.ac.itb.ee.lskk.lumen.parent</artifactId>
+	<groupId>org.lskk</groupId>
+	<artifactId>org.lskk.lumen.parent</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Lumen Robot Friend Knowledge Base</name>
@@ -24,7 +24,7 @@
 	</scm>
 	<organization>
 		<name>LSKK EE ITB</name>
-		<url>http://lskk.ee.itb.ac.id/</url>
+		<url>http://www.lskk.org/</url>
 	</organization>
 	<developers>
 		<developer>
@@ -52,24 +52,24 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>id.ac.itb.ee.lskk</groupId>
-				<artifactId>id.ac.itb.ee.lskk.lumen.core</artifactId>
+				<groupId>org.lskk</groupId>
+				<artifactId>org.lskk.lumen.kb.core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>id.ac.itb.ee.lskk</groupId>
-				<artifactId>id.ac.itb.ee.lskk.lumen.web</artifactId>
+				<groupId>org.lskk</groupId>
+				<artifactId>org.lskk.lumen.web</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>id.ac.itb.ee.lskk</groupId>
-				<artifactId>id.ac.itb.ee.lskk.lumen.app</artifactId>
+				<groupId>org.lskk</groupId>
+				<artifactId>org.lskk.lumen.app</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			
 			<dependency>
-				<groupId>id.ac.itb.ee.lskk</groupId>
-				<artifactId>id.ac.itb.ee.lskk.relexid.parent</artifactId>
+				<groupId>org.lskk</groupId>
+				<artifactId>org.lskk.relexid.parent</artifactId>
 				<version>0.1.0-SNAPSHOT</version>
 				<type>pom</type>
 				<scope>import</scope>
